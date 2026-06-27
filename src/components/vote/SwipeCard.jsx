@@ -1,19 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 
-const SWIPE_THRESHOLD = 72;
+const SWIPE_THRESHOLD = 48;     // 거리 임계값 (px)
+const VELOCITY_THRESHOLD = 0.35; // 속도 임계값 (px/ms) — 빠르게 짧게 밀어도 인식
+const VELOCITY_MIN_DIST = 20;   // 속도 인식 최소 이동거리 (px)
 
-function SwipeCard({ photo, photoKey, onSwipe }) {
-  const [drag, setDrag] = useState({ isDragging: false, startX: 0, x: 0 });
+function SwipeCard({ photo, photoKey, onSwipe, onDragChange }) {
+  const [drag, setDrag] = useState({ isDragging: false, startX: 0, x: 0, startTime: 0 });
   const [flyOut, setFlyOut] = useState(null);
-  const dragRef = useRef({ isDragging: false, startX: 0, x: 0 });
+  const dragRef = useRef({ isDragging: false, startX: 0, x: 0, startTime: 0 });
   const flyOutRef = useRef(null);
   const timeoutRef = useRef(null);
+  const finishSwipeRef = useRef(null);
 
   const resetDrag = () => {
-    dragRef.current = { isDragging: false, startX: 0, x: 0 };
-    setDrag({ isDragging: false, startX: 0, x: 0 });
+    dragRef.current = { isDragging: false, startX: 0, x: 0, startTime: 0 };
+    setDrag({ isDragging: false, startX: 0, x: 0, startTime: 0 });
     setFlyOut(null);
     flyOutRef.current = null;
+    onDragChange?.(0);
   };
 
   useEffect(() => {
@@ -29,18 +33,30 @@ function SwipeCard({ photo, photoKey, onSwipe }) {
         timeoutRef.current = null;
       }
     };
-  }, [photoKey, photo?.id, photo?.imageUrl, photo?.previewUrl, photo?.label]);
+  }, [photoKey]);
 
   const finishSwipe = (value) => {
     if (flyOutRef.current) return;
 
     flyOutRef.current = value;
     setFlyOut(value);
+    onDragChange?.(value === 'like' ? 360 : -360);
     timeoutRef.current = window.setTimeout(() => {
       onSwipe(value);
       timeoutRef.current = null;
     }, 180);
   };
+
+  // 전역 방향키 처리 — 포커스 없이도 작동하도록 ref 경유
+  finishSwipeRef.current = finishSwipe;
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'ArrowRight') finishSwipeRef.current?.('like');
+      if (e.key === 'ArrowLeft') finishSwipeRef.current?.('skip');
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   const handlePointerDown = (event) => {
     if (flyOutRef.current) return;
@@ -48,7 +64,7 @@ function SwipeCard({ photo, photoKey, onSwipe }) {
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
 
-    const nextDrag = { isDragging: true, startX: event.clientX, x: 0 };
+    const nextDrag = { isDragging: true, startX: event.clientX, x: 0, startTime: Date.now() };
     dragRef.current = nextDrag;
     setDrag(nextDrag);
   };
@@ -63,6 +79,7 @@ function SwipeCard({ photo, photoKey, onSwipe }) {
     };
     dragRef.current = nextDrag;
     setDrag(nextDrag);
+    onDragChange?.(nextDrag.x);
   };
 
   const handlePointerUp = (event) => {
@@ -73,34 +90,22 @@ function SwipeCard({ photo, photoKey, onSwipe }) {
     }
 
     const finalX = dragRef.current.x;
+    const elapsed = Date.now() - dragRef.current.startTime;
+    const velocity = elapsed > 0 ? finalX / elapsed : 0;
 
-    if (finalX >= SWIPE_THRESHOLD) {
-      finishSwipe('like');
-      return;
-    }
+    const byDistance = Math.abs(finalX) >= SWIPE_THRESHOLD;
+    const byVelocity = Math.abs(velocity) >= VELOCITY_THRESHOLD && Math.abs(finalX) >= VELOCITY_MIN_DIST;
 
-    if (finalX <= -SWIPE_THRESHOLD) {
-      finishSwipe('skip');
+    if (byDistance || byVelocity) {
+      finishSwipe(finalX > 0 ? 'like' : 'skip');
       return;
     }
 
     resetDrag();
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'ArrowRight') {
-      finishSwipe('like');
-    }
-
-    if (event.key === 'ArrowLeft') {
-      finishSwipe('skip');
-    }
-  };
-
   const dragX = flyOut === 'like' ? 360 : flyOut === 'skip' ? -360 : drag.x;
   const rotate = Math.max(Math.min(dragX / 14, 16), -16);
-  const likeOpacity = Math.min(Math.max(dragX / 110, 0), 1);
-  const skipOpacity = Math.min(Math.max(-dragX / 110, 0), 1);
   const imageUrl = photo?.imageUrl || photo?.previewUrl;
 
   return (
@@ -113,15 +118,10 @@ function SwipeCard({ photo, photoKey, onSwipe }) {
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
-      onKeyDown={handleKeyDown}
       style={{
         transform: `translateX(${dragX}px) rotate(${rotate}deg)`,
-        '--like-opacity': likeOpacity,
-        '--skip-opacity': skipOpacity,
       }}
     >
-      <span className="swipe-label swipe-label--skip">SKIP</span>
-      <span className="swipe-label swipe-label--like">LIKE</span>
       <div className={`mock-photo ${photo.tone ? `mock-photo--${photo.tone}` : ''}`}>
         {imageUrl && <img className="swipe-photo-image" src={imageUrl} alt={photo?.label || '평가할 사진'} draggable="false" />}
         <div className="swipe-photo-caption">

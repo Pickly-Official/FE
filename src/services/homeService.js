@@ -11,6 +11,7 @@ const mockHomeData = {
       name: "성수동 서울숲",
       recommendRate: 89,
       imageUrl: "",
+      tone: "forest",
       tags: ["감성", "자연광"],
     },
     {
@@ -19,7 +20,17 @@ const mockHomeData = {
       name: "앤트러사이트 한남점",
       recommendRate: 78,
       imageUrl: "",
+      tone: "cafe",
       tags: ["카페", "실내"],
+    },
+    {
+      id: 3,
+      rank: 3,
+      name: "한강공원 반포",
+      recommendRate: 71,
+      imageUrl: "",
+      tone: "river",
+      tags: ["야외", "노을"],
     },
   ],
 
@@ -44,6 +55,24 @@ const mockHomeData = {
       title: "내 졸업사진 뽑기",
       description: "총 12명 참여",
       role: "OWNER",
+    },
+    {
+      id: 4,
+      title: "성수동 카페 프로필컷",
+      description: "총 18명 참여",
+      role: "OWNER",
+    },
+    {
+      id: 5,
+      title: "여행 피드 첫 장 고르기",
+      description: "총 9명 참여",
+      role: "OWNER",
+    },
+    {
+      id: 6,
+      title: "친구 생일 업로드 사진",
+      description: "총 14명 참여",
+      role: "VOTER",
     },
   ],
 };

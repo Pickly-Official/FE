@@ -1,9 +1,9 @@
 export const SOCIAL_LOGIN_OPTIONS = [
   {
-    id: "kakao",
-    provider: "kakao",
-    label: "카카오톡으로 시작하기",
-    mark: "TALK",
-    className: "kakao",
+    id: "google",
+    provider: "google",
+    label: "구글 로그인",
+    mark: "G",
+    className: "google",
   },
 ];

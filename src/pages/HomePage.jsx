@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AppLayout from "../components/layout/AppLayout";
@@ -7,6 +8,7 @@ import { useHome } from "../hooks/useHome";
 
 function HomePage() {
   const navigate = useNavigate();
+  const [selectedSpot, setSelectedSpot] = useState(null);
   const { homeData, isLoading, errorMessage } = useHome();
 
   const { statistics, popularSpots, activePolls, closedPolls } = homeData;
@@ -34,9 +36,9 @@ function HomePage() {
         <div className="hero-copy">
           <p className="eyebrow">친구들의 반응으로</p>
           <h1>
-            오늘은 어떤
+            오늘의
             <br />
-            <span>베스트컷</span>을 찾아볼까요?
+            <span>베스트컷</span>을 찾아보세요
           </h1>
         </div>
 
@@ -62,8 +64,9 @@ function HomePage() {
 
           <div className="spot-list">
             {popularSpots.map((spot, index) => (
-              <article key={spot.id} className="spot-card">
-                <div className={`spot-photo ${index === 1 ? 'spot-photo--cafe' : 'spot-photo--forest'}`}>
+              <button key={spot.id} className="spot-card" type="button" onClick={() => setSelectedSpot(spot)}>
+                <div className={`spot-photo spot-photo--${spot.tone || (index === 1 ? 'cafe' : 'forest')}`}>
+                  {spot.imageUrl && <img src={spot.imageUrl} alt="" />}
                   <div className="rank-badge">{spot.rank}</div>
                 </div>
 
@@ -78,7 +81,7 @@ function HomePage() {
                     ))}
                   </div>
                 </div>
-              </article>
+              </button>
             ))}
           </div>
         </section>
@@ -88,38 +91,74 @@ function HomePage() {
         </button>
 
         <section className="section-block">
-          <PollGroup title="내 진행중인 투표" polls={activePolls} defaultOpen onMovePoll={movePoll} />
+          <PollGroup title="내 진행중인 투표" status="active" polls={activePolls} onMovePoll={movePoll} />
 
-          <PollGroup title="내 종료된 투표" polls={closedPolls} onMovePoll={movePoll} />
+          <PollGroup title="내 종료된 투표" status="closed" polls={closedPolls} onMovePoll={movePoll} />
         </section>
       </section>
+
+      {selectedSpot && (
+        <SpotPreviewModal spot={selectedSpot} onClose={() => setSelectedSpot(null)} />
+      )}
     </AppLayout>
   );
 }
 
-function PollGroup({ title, polls, defaultOpen = false, onMovePoll }) {
+function SpotPreviewModal({ spot, onClose }) {
   return (
-    <details className="poll-group" open={defaultOpen}>
-      <summary className="poll-group-header">
+    <div className="spot-preview-backdrop" role="dialog" aria-modal="true" aria-label={`${spot.name} 사진`}>
+      <button className="spot-preview-backdrop__close" type="button" onClick={onClose} aria-label="닫기" />
+      <section className="spot-preview-modal">
+        <div className={`spot-preview-image spot-photo--${spot.tone || 'forest'}`}>
+          {spot.imageUrl && <img src={spot.imageUrl} alt={spot.name} />}
+        </div>
+        <div className="spot-preview-caption">
+          <strong>{spot.name}</strong>
+          <span>{spot.recommendRate}% 추천</span>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function PollGroup({ title, status, polls, defaultOpen = false, onMovePoll }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const statusLabel = status === 'active' ? '진행중' : '종료';
+
+  return (
+    <section className={`poll-group poll-group--${status}${isOpen ? ' poll-group--open' : ''}`}>
+      <button
+        className="poll-group-header"
+        type="button"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((current) => !current)}
+      >
         <span className="poll-group-title">
+          <span className="poll-group-status">{statusLabel}</span>
           <strong>{title}</strong>
           <em>{polls.length}개</em>
         </span>
-        <span className="poll-group-arrow">⌄</span>
-      </summary>
+        <span className="poll-group-arrow" aria-hidden="true" />
+      </button>
 
-      <div className="poll-list">
-        {polls.map((poll) => (
-          <button key={poll.id} className="poll-item" type="button" onClick={() => onMovePoll(poll)}>
-            <div>
-              <strong>{poll.title}</strong>
-              <span>{poll.description}</span>
-            </div>
-            <em>›</em>
-          </button>
-        ))}
-      </div>
-    </details>
+      {isOpen && (
+        <div className="poll-list">
+          {polls.length > 0 ? (
+            polls.map((poll) => (
+              <button key={poll.id} className="poll-item" type="button" onClick={() => onMovePoll(poll)}>
+                <div>
+                  <strong>{poll.title}</strong>
+                  <span>{poll.description}</span>
+                </div>
+                <em>›</em>
+              </button>
+            ))
+          ) : (
+            <p className="poll-empty">아직 표시할 투표가 없어요.</p>
+          )}
+        </div>
+      )}
+    </section>
   );
 }
 

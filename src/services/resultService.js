@@ -1,43 +1,136 @@
-export const resultService = {
-  getResult: async (pollId) => ({
-    id: pollId,
-    title: '프로필 사진 골라줘',
-    location: '서울숲',
-    participantCount: 28,
-    closedAt: '2026-06-29T18:00:00.000Z',
-    analysis: {
-      title: 'AI 분석 인사이트',
-      model: 'Pickly AI',
-      summary: '친구들은 밝은 표정과 깔끔한 배경이 있는 사진을 더 선호했어요.',
-      tags: ['자연스러움', '밝은조명', '프로필추천'],
+import { pollStore } from '../store/pollStore';
+
+const fallbackRankings = [
+  {
+    id: 'sun-front',
+    rank: 1,
+    title: '햇살 정면 컷',
+    rate: 86,
+    votes: 24,
+    comment: '',
+    criteria: {
+      composition: '',
+      expression: '',
+      lighting: '',
     },
-    rankings: [
-      {
-        id: 'sun-front',
-        rank: 1,
-        title: '햇살 정면 컷',
-        rate: 86,
-        votes: 24,
-        comment: '표정이 가장 자연스럽고 조명이 안정적이에요.',
+    tone: 'sun',
+  },
+  {
+    id: 'cafe-window',
+    rank: 2,
+    title: '카페 창가 컷',
+    rate: 72,
+    votes: 20,
+    comment: '',
+    criteria: {
+      composition: '',
+      expression: '',
+      lighting: '',
+    },
+    tone: 'cafe',
+  },
+  {
+    id: 'street-bg',
+    rank: 3,
+    title: '거리 배경 컷',
+    rate: 58,
+    votes: 16,
+    comment: '',
+    criteria: {
+      composition: '',
+      expression: '',
+      lighting: '',
+    },
+    tone: 'street',
+  },
+  {
+    id: 'forest-smile',
+    rank: 4,
+    title: '자연스러운 웃음 컷',
+    rate: 44,
+    votes: 12,
+    comment: '',
+    criteria: {
+      composition: '',
+      expression: '',
+      lighting: '',
+    },
+    tone: 'forest',
+  },
+  {
+    id: 'night-profile',
+    rank: 5,
+    title: '야간 프로필 컷',
+    rate: 31,
+    votes: 9,
+    comment: '',
+    criteria: {
+      composition: '',
+      expression: '',
+      lighting: '',
+    },
+    tone: 'cafe',
+  },
+];
+
+const rankingRates = [86, 72, 58, 44, 31, 24, 18];
+
+const resolvePhotoUrl = (photo) => (
+  photo.imageUrl
+  || photo.photoUrl
+  || photo.s3Url
+  || photo.thumbnailUrl
+  || photo.previewUrl
+  || ''
+);
+
+const buildRankings = (pollId) => {
+  const storedPoll = pollStore.find(pollId);
+  const photos = storedPoll?.photos ?? [];
+
+  if (!photos.length) {
+    return fallbackRankings;
+  }
+
+  return photos.map((photo, index) => ({
+    id: photo.id ?? `photo-${index + 1}`,
+    rank: index + 1,
+    title: photo.label || photo.name || `후보 사진 ${index + 1}`,
+    rate: rankingRates[index] ?? Math.max(52, 86 - index * 12),
+    votes: Math.round((rankingRates[index] ?? 58) * 0.28),
+    comment: '',
+    criteria: {
+      composition: '',
+      expression: '',
+      lighting: '',
+    },
+    imageUrl: resolvePhotoUrl(photo),
+    photoUrl: resolvePhotoUrl(photo),
+    tone: photo.tone,
+  }));
+};
+
+export const resultService = {
+  getResult: async (pollId) => {
+    const storedPoll = pollStore.find(pollId);
+
+    const rankings = buildRankings(pollId);
+
+    return {
+      id: pollId,
+      title: storedPoll?.title || '프로필 사진 골라줘',
+      location: storedPoll?.location || '서울숲',
+      participantCount: 28,
+      closedAt: '2026-06-29T18:00:00.000Z',
+      analysis: {
+        title: 'AI 분석 인사이트',
+        model: 'Pickly AI',
+        summary: '친구들은 밝은 표정과 깔끔한 배경이 있는 사진을 더 선호했어요.',
+        tags: ['자연스러움', '밝은조명', '프로필추천'],
       },
-      {
-        id: 'cafe-window',
-        rank: 2,
-        title: '카페 창가 컷',
-        rate: 72,
-        votes: 20,
-        comment: '배경 분위기가 좋고 인물 집중도가 높아요.',
-      },
-      {
-        id: 'street-bg',
-        rank: 3,
-        title: '거리 배경 컷',
-        rate: 58,
-        votes: 16,
-        comment: '구도는 좋지만 얼굴 그림자가 조금 강해요.',
-      },
-    ],
-  }),
+      rankings,
+    };
+  },
 
   getMyPolls: async () => ({
     profile: {

@@ -12,7 +12,8 @@ function PhotoGrid({
   error = '',
 }) {
   const inputRef = useRef(null);
-  const canAddMore = photos.length < maxPhotos;
+  const canAddMore = photos.length < maxPhotos && !isProcessing && !isComplete;
+  const hasEnoughPhotos = photos.length >= POLL_OPTIONS.minPhotos;
 
   const handleFileChange = (event) => {
     onAddPhotos(event.target.files);
@@ -54,15 +55,37 @@ function PhotoGrid({
       />
 
       {error && <p className="form-error">{error}</p>}
+
+      <ol className="photo-workflow" aria-label="사진 업로드 진행 단계">
+        <li className={photos.length > 0 ? 'is-active' : ''}>
+          <span>1</span>
+          사진 추가
+        </li>
+        <li className={isProcessing ? 'is-active' : isComplete ? 'is-done' : hasEnoughPhotos ? 'is-ready' : ''}>
+          <span>2</span>
+          위치 분석
+        </li>
+        <li className={isComplete ? 'is-active' : ''}>
+          <span>3</span>
+          위치 확인
+        </li>
+      </ol>
+
       <button
         className={`photo-complete-button ${isComplete ? 'is-complete' : ''}`}
         type="button"
         onClick={onComplete}
-        disabled={isProcessing || photos.length < POLL_OPTIONS.minPhotos}
+        disabled={isProcessing || !hasEnoughPhotos}
       >
-        {isProcessing ? '처리 중' : isComplete ? '완료됨' : '완료'}
+        {isProcessing ? '위치 분석 중' : isComplete ? '위치 확인 완료' : '완료'}
       </button>
-      <p className="helper-copy">사진 업로드 후 완료를 누르면 위치 정보가 분석돼요.</p>
+      <p className="helper-copy">
+        {isComplete
+          ? '위치 정보가 준비됐어요. 아래에서 확인하고 투표를 생성하세요.'
+          : hasEnoughPhotos
+            ? '완료를 누르면 백엔드에서 사진 위치 정보를 분석해요.'
+            : `사진을 최소 ${POLL_OPTIONS.minPhotos}장 추가하면 위치 분석을 시작할 수 있어요.`}
+      </p>
     </section>
   );
 }
