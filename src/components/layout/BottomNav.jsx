@@ -1,35 +1,42 @@
-import Header from "../common/Header";
-import BottomNav from "./BottomNav";
+import { NavLink } from "react-router-dom";
 
-function AppLayout({
-  children,
-  showHeader = true,
-  showBottomNav = true,
-  headerTitle = "Pickly",
-  showBack = false,
-  rightContent,
-}) {
+import { ROUTES } from "../../constants/routes";
+
+const navItems = [
+  {
+    path: ROUTES.HOME,
+    label: "홈",
+    icon: "⌂",
+  },
+  {
+    path: ROUTES.CREATE,
+    label: "만들기",
+    icon: "+",
+  },
+  {
+    path: ROUTES.MYPAGE,
+    label: "마이",
+    icon: "○",
+  },
+];
+
+function BottomNav() {
   return (
-    <div className="app-layout">
-      <div className="app-container">
-        {showHeader && (
-          <Header title={headerTitle} showBack={showBack} rightContent={rightContent} />
-        )}
-
-        <main
-          className={[
-            "app-main",
-            showHeader ? "has-header" : "",
-            showBottomNav ? "has-bottom-nav" : "",
-          ].join(" ")}
+    <nav className="bottom-nav" aria-label="하단 메뉴">
+      {navItems.map((item) => (
+        <NavLink
+          key={item.path}
+          to={item.path}
+          className={({ isActive }) =>
+            isActive ? "bottom-nav-item bottom-nav-item-active" : "bottom-nav-item"
+          }
         >
-          {children}
-        </main>
-
-        {showBottomNav && <BottomNav />}
-      </div>
-    </div>
+          <span className="bottom-nav-icon">{item.icon}</span>
+          <span>{item.label}</span>
+        </NavLink>
+      ))}
+    </nav>
   );
 }
 
-export default AppLayout;
+export default BottomNav;

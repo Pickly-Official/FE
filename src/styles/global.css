@@ -76,7 +76,15 @@ a {
 }
 
 .app-main.has-bottom-nav {
-  padding-bottom: 0;
+  padding-bottom: var(--bottom-nav-height);
+}
+
+.app-header-space {
+  height: 70px;
+}
+
+.app-bottom-space {
+  height: 70px;
 }
 
 /* =========================
@@ -107,6 +115,7 @@ a {
   display: flex;
   align-items: center;
   gap: 6px;
+  cursor: pointer;
 }
 
 .header-logo-mark {
@@ -137,7 +146,7 @@ a {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--color-text-main);
-  font-size: 15px;
+  font-size: 20px;
 }
 
 .header-right {
@@ -146,7 +155,6 @@ a {
   gap: 8px;
 }
 
-/* Header 오른쪽 네비 */
 .header-nav {
   display: flex;
   align-items: center;
@@ -175,7 +183,6 @@ a {
 
 /* =========================
    BottomNav
-   현재 피그마는 상단 네비 구조라 홈에서는 사용하지 않아도 됨
 ========================= */
 
 .bottom-nav {
@@ -226,7 +233,7 @@ a {
 }
 
 /* =========================
-   Common Button
+   Button
 ========================= */
 
 .common-button {
@@ -234,11 +241,6 @@ a {
   font-family: var(--font-main);
   font-weight: 600;
   transition: 0.2s ease;
-}
-
-.common-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .common-button-primary {
@@ -289,7 +291,7 @@ a {
 }
 
 /* =========================
-   Common Card
+   Card
 ========================= */
 
 .common-card {
@@ -383,6 +385,28 @@ a {
 
 .modal-footer {
   margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-cancel-button,
+.modal-confirm-button {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  border: none;
+}
+
+.modal-cancel-button {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-main);
+}
+
+.modal-confirm-button {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: var(--color-text-main);
 }
 
 /* =========================
@@ -472,7 +496,6 @@ a {
   color: var(--color-text-sub);
 }
 
-/* 카카오 로그인만 사용 */
 .kakao-login-frame {
   position: absolute;
   width: 349px;
@@ -541,6 +564,12 @@ a {
   color: var(--color-primary);
 }
 
+.home-error-message {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: #ff6b6b;
+}
+
 .home-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -607,9 +636,11 @@ a {
 }
 
 .popular-image-box {
+  display: block;
   width: 100%;
   height: 74px;
   background: #ffffff;
+  object-fit: cover;
 }
 
 .popular-info {

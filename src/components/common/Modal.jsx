@@ -1,9 +1,11 @@
-function Modal({ open, title, children, onClose, footer }) {
-  if (!open) return null;
+function Modal({ isOpen, title, children, confirmText = "확인", cancelText = "취소", onConfirm, onClose }) {
+  if (!isOpen) {
+    return null;
+  }
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal-box">
+    <div className="modal-backdrop" role="presentation" onClick={onClose}>
+      <div className="modal-box" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <div className="modal-header">
           {title && <h2 className="modal-title">{title}</h2>}
 
@@ -14,7 +16,17 @@ function Modal({ open, title, children, onClose, footer }) {
 
         <div className="modal-content">{children}</div>
 
-        {footer && <div className="modal-footer">{footer}</div>}
+        <div className="modal-footer">
+          <button type="button" className="modal-cancel-button" onClick={onClose}>
+            {cancelText}
+          </button>
+
+          {onConfirm && (
+            <button type="button" className="modal-confirm-button" onClick={onConfirm}>
+              {confirmText}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

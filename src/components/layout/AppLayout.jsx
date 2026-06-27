@@ -4,16 +4,16 @@ import BottomNav from "./BottomNav";
 function AppLayout({
   children,
   showHeader = true,
-  showBottomNav = true,
+  showBottomNav = false,
   headerTitle = "Pickly",
   showBack = false,
-  rightContent,
+  headerRightContent,
 }) {
   return (
     <div className="app-layout">
       <div className="app-container">
         {showHeader && (
-          <Header title={headerTitle} showBack={showBack} rightContent={rightContent} />
+          <Header title={headerTitle} showBack={showBack} rightContent={headerRightContent} />
         )}
 
         <main
@@ -21,7 +21,9 @@ function AppLayout({
             "app-main",
             showHeader ? "has-header" : "",
             showBottomNav ? "has-bottom-nav" : "",
-          ].join(" ")}
+          ]
+            .filter(Boolean)
+            .join(" ")}
         >
           {children}
         </main>
