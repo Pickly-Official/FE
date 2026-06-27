@@ -914,9 +914,11 @@ input {
 }
 
 .mock-photo {
+  position: relative;
   height: 100%;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 24px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -927,8 +929,35 @@ input {
   font-weight: 800;
 }
 
+.mock-photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(4, 17, 36, 0.04), rgba(4, 17, 36, 0.78));
+  pointer-events: none;
+}
+
+.swipe-photo-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.swipe-photo-caption {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
 .mock-photo span,
 .mock-photo em {
+  position: relative;
+  z-index: 2;
   width: 100%;
   font-style: normal;
 }
@@ -983,7 +1012,8 @@ input {
 }
 
 .vote-actions button,
-.undo-action button {
+.undo-action button,
+.undo-complete-button {
   min-width: 144px;
   min-height: 50px;
   border: 1px solid var(--pickly-line);
@@ -995,9 +1025,15 @@ input {
 }
 
 .vote-actions button:disabled,
-.undo-action button:disabled {
+.undo-action button:disabled,
+.undo-complete-button:disabled {
   color: #526071;
   cursor: not-allowed;
+}
+
+.undo-complete-button {
+  width: 100%;
+  margin: 0 0 12px;
 }
 
 .vote-actions span {

@@ -6,7 +6,7 @@ function SharePage() {
   const { id = 'demo' } = useParams();
   const { state } = useLocation();
   const [copyStatus, setCopyStatus] = useState('');
-  const shareUrl = `https://pickly.app/vote/${id}`;
+  const shareUrl = `${window.location.origin}/vote/${id}`;
 
   const handleCopy = async () => {
     const copied = await copyToClipboard(shareUrl);

@@ -1,5 +1,5 @@
 :root {
-  --color-bg: #0f172a;
+  --color-bg: #041124;
   --color-primary: #00e5a8;
   --color-secondary: #6366f1;
   --color-text-main: #ffffff;
@@ -7,5 +7,6 @@
 
   --font-main: "Pretendard", sans-serif;
 
-  --mobile-width: 391px;
+  --mobile-width: 393px;
+  --bottom-nav-height: 72px;
 }

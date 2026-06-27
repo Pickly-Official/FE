@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const SWIPE_THRESHOLD = 72;
 
@@ -12,6 +12,10 @@ function SwipeCard({ photo, onSwipe }) {
     setDrag({ isDragging: false, startX: 0, x: 0 });
     setFlyOut(null);
   };
+
+  useEffect(() => {
+    resetDrag();
+  }, [photo?.id]);
 
   const finishSwipe = (value) => {
     if (flyOut) return;
@@ -82,6 +86,7 @@ function SwipeCard({ photo, onSwipe }) {
   const rotate = Math.max(Math.min(dragX / 14, 16), -16);
   const likeOpacity = Math.min(Math.max(dragX / 110, 0), 1);
   const skipOpacity = Math.min(Math.max(-dragX / 110, 0), 1);
+  const imageUrl = photo?.imageUrl || photo?.previewUrl;
 
   return (
     <section
@@ -102,9 +107,12 @@ function SwipeCard({ photo, onSwipe }) {
     >
       <span className="swipe-label swipe-label--skip">SKIP</span>
       <span className="swipe-label swipe-label--like">LIKE</span>
-      <div className={`mock-photo mock-photo--${photo.tone}`}>
-        <span>{photo.label}</span>
-        <em>{photo.description}</em>
+      <div className={`mock-photo ${photo.tone ? `mock-photo--${photo.tone}` : ''}`}>
+        {imageUrl && <img className="swipe-photo-image" src={imageUrl} alt={photo.label || '평가할 사진'} draggable="false" />}
+        <div className="swipe-photo-caption">
+          <span>{photo.label}</span>
+          <em>{photo.description}</em>
+        </div>
       </div>
     </section>
   );

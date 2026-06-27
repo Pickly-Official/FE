@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { voteService } from '../services/voteService';
 
 export function useVote(pollId) {
@@ -7,6 +7,7 @@ export function useVote(pollId) {
   const [votes, setVotes] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
+  const submissionRef = useRef(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -14,6 +15,9 @@ export function useVote(pollId) {
     voteService.getPoll(pollId).then((nextPoll) => {
       if (isMounted) {
         setPoll(nextPoll);
+        setIndex(0);
+        setVotes([]);
+        setSubmitResult(null);
       }
     });
 
@@ -46,10 +50,14 @@ export function useVote(pollId) {
     setIndex((current) => current + 1);
 
     if (nextVotes.length === photos.length) {
+      const submissionId = submissionRef.current + 1;
+      submissionRef.current = submissionId;
       setIsSubmitting(true);
       const result = await voteService.submit({ pollId, votes: nextVotes });
-      setSubmitResult(result);
-      setIsSubmitting(false);
+      if (submissionRef.current === submissionId) {
+        setSubmitResult(result);
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -59,6 +67,8 @@ export function useVote(pollId) {
     setVotes((current) => current.slice(0, -1));
     setIndex((current) => Math.max(current - 1, 0));
     setSubmitResult(null);
+    setIsSubmitting(false);
+    submissionRef.current += 1;
   };
 
   return {

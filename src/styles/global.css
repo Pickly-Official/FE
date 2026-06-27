@@ -68,7 +68,7 @@ a {
 .app-main {
   width: 100%;
   min-height: 100vh;
-  padding: 0 8px;
+  padding: 0 14px;
 }
 
 .app-main.has-header {
@@ -416,7 +416,7 @@ a {
 .login-page {
   position: relative;
   width: var(--mobile-width);
-  min-height: 100vh;
+  min-height: 852px;
   margin: 0 auto;
   background: var(--color-bg);
   overflow: hidden;
@@ -426,23 +426,27 @@ a {
   position: absolute;
   width: 176px;
   height: 177px;
-  left: 112px;
+  left: 108px;
   top: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(143.76deg, #0f4349 16%, #111828 36.54%);
+  filter: drop-shadow(0 0 7px rgba(13, 213, 177, 0.16));
 }
 
 .login-mascot-icon {
-  width: 116px;
-  height: 116px;
-  border-radius: 32px;
+  width: 94px;
+  height: 94px;
+  border: 3px solid rgba(255, 255, 255, 0.92);
+  border-radius: 22px;
   background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   color: var(--color-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 68px;
+  font-size: 54px;
   font-weight: 900;
   transform: rotate(8deg);
   box-shadow: 0 0 40px rgba(0, 229, 168, 0.35);
@@ -452,7 +456,7 @@ a {
   position: absolute;
   width: 178px;
   height: 95px;
-  left: 115px;
+  left: 107px;
   top: 227px;
   display: flex;
   align-items: center;
@@ -499,16 +503,16 @@ a {
 .kakao-login-frame {
   position: absolute;
   width: 349px;
-  height: 52px;
+  height: 56px;
   left: 22px;
   top: 707px;
 }
 
 .kakao-login-button {
   width: 100%;
-  height: 52px;
+  height: 56px;
   border: none;
-  border-radius: 14px;
+  border-radius: 16px;
   background: #fee500;
   color: #191919;
   font-family: var(--font-main);
@@ -539,24 +543,24 @@ a {
 ========================= */
 
 .home-page {
-  padding-bottom: 24px;
+  padding: 18px 0 28px;
 }
 
 .home-title-area {
-  margin-top: 6px;
+  margin-top: 2px;
 }
 
 .home-subtitle {
   margin: 0;
-  font-size: 10px;
+  font-size: 13px;
   color: var(--color-text-sub);
 }
 
 .home-title-area h2 {
-  margin: 4px 0 0;
-  font-size: 15px;
+  margin: 8px 0 0;
+  font-size: 24px;
   line-height: 1.35;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--color-text-main);
 }
 
@@ -573,51 +577,51 @@ a {
 .home-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 18px;
 }
 
 .home-stat-card {
-  height: 54px;
-  padding: 8px 10px;
-  border-radius: 12px;
+  min-height: 78px;
+  padding: 14px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .home-stat-card p {
   margin: 0;
-  font-size: 9px;
+  font-size: 12px;
   color: var(--color-text-sub);
 }
 
 .home-stat-card strong {
   display: block;
-  margin-top: 5px;
-  font-size: 14px;
+  margin-top: 8px;
+  font-size: 22px;
   color: var(--color-primary);
 }
 
 .home-popular-section {
-  margin-top: 12px;
+  margin-top: 22px;
 }
 
 .home-popular-section h3 {
-  margin: 0 0 8px;
-  font-size: 12px;
-  font-weight: 700;
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 800;
 }
 
 .popular-card-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 12px;
 }
 
 .popular-card {
   position: relative;
-  height: 118px;
-  border-radius: 12px;
+  min-height: 170px;
+  border-radius: 18px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -625,31 +629,33 @@ a {
 
 .popular-rank-badge {
   position: absolute;
-  left: 7px;
-  top: 6px;
-  padding: 2px 7px;
+  left: 10px;
+  top: 10px;
+  padding: 5px 9px;
   border-radius: 999px;
   background: #111827;
   color: #ffffff;
-  font-size: 8px;
+  font-size: 11px;
   z-index: 2;
 }
 
 .popular-image-box {
   display: block;
   width: 100%;
-  height: 74px;
-  background: #ffffff;
+  height: 108px;
+  background:
+    radial-gradient(circle at 72% 22%, rgba(255, 255, 255, 0.7), transparent 15%),
+    linear-gradient(135deg, rgba(13, 213, 177, 0.64), rgba(89, 116, 233, 0.74));
   object-fit: cover;
 }
 
 .popular-info {
-  padding: 7px;
+  padding: 12px;
 }
 
 .popular-info strong {
   display: block;
-  font-size: 9px;
+  font-size: 14px;
   color: var(--color-text-main);
   white-space: nowrap;
   overflow: hidden;
@@ -658,38 +664,38 @@ a {
 
 .popular-info span {
   display: block;
-  margin-top: 3px;
-  font-size: 8px;
+  margin-top: 6px;
+  font-size: 12px;
   color: var(--color-primary);
 }
 
 .home-create-button {
   width: 100%;
-  height: 42px;
-  margin-top: 12px;
+  height: 54px;
+  margin-top: 20px;
   border: none;
-  border-radius: 9px;
+  border-radius: 16px;
   background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   color: var(--color-text-main);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 800;
 }
 
 .home-accordion-section {
-  margin-top: 12px;
+  margin-top: 18px;
 }
 
 .home-accordion {
-  margin-top: 8px;
-  padding: 10px;
-  border-radius: 12px;
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .home-accordion summary {
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
   cursor: pointer;
   color: var(--color-text-main);
 }
@@ -697,14 +703,14 @@ a {
 .home-poll-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .home-poll-list button {
   width: 100%;
-  min-height: 34px;
-  padding: 7px 8px;
+  min-height: 62px;
+  padding: 12px;
   border: none;
   border-radius: 9px;
   background: rgba(15, 23, 42, 0.8);
@@ -717,14 +723,14 @@ a {
 
 .home-poll-list strong {
   display: block;
-  font-size: 9px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .home-poll-list span {
   display: block;
-  margin-top: 2px;
-  font-size: 8px;
+  margin-top: 5px;
+  font-size: 12px;
   color: var(--color-text-sub);
 }
 
