@@ -1,4 +1,11 @@
 :root {
-  --color-primary: #4f46e5;
-  --color-bg: #f9fafb;
+  --color-bg: #0f172a;
+  --color-primary: #00e5a8;
+  --color-secondary: #6366f1;
+  --color-text-main: #ffffff;
+  --color-text-sub: #757575;
+
+  --font-main: "Pretendard", sans-serif;
+
+  --mobile-width: 391px;
 }
