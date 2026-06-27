@@ -19,6 +19,21 @@ Pickly는 친구들의 반응과 AI 기반 분석을 통해, 팀원들이 자연
   - 사진 선택 과정을 더 간단하고 즐겁게 만들어 줍니다.
 
 ## 핵심 기능 목록 ⭐
+| 분류               | 기술                               |
+| ---------------- | -------------------------------- |
+| Package Manager  | npm                              |
+| Build Tool       | Vite `^5.4.10`                   |
+| UI Library       | React `^18.3.1`                  |
+| DOM Rendering    | React DOM `^18.3.1`              |
+| Language         | JavaScript / JSX                 |
+| Routing          | react-router-dom `^7.18.0`       |
+| HTTP Client      | axios `^1.18.1`                  |
+| Styling          | CSS (`global.css`, `pickly.css`) |
+| Type Check / Dev | TypeScript `^5.6.3`              |
+| React Plugin     | @vitejs/plugin-react `^4.3.1`    |
+| Deployment       | Vercel                           |
+| Version Control  | Git / GitHub                     |
+
 
 | 기능명 | 설명 | 우선순위 | 관련 화면 |
 |---|---|---|---|
