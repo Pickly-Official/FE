@@ -2,16 +2,24 @@ function Button({
   children,
   type = "button",
   variant = "primary",
-  onClick,
+  size = "medium",
+  fullWidth = false,
   disabled = false,
+  onClick,
   className = "",
 }) {
   return (
     <button
       type={type}
-      className={`common-button common-button-${variant} ${className}`}
-      onClick={onClick}
       disabled={disabled}
+      onClick={onClick}
+      className={[
+        "common-button",
+        `common-button-${variant}`,
+        `common-button-${size}`,
+        fullWidth ? "common-button-full" : "",
+        className,
+      ].join(" ")}
     >
       {children}
     </button>
