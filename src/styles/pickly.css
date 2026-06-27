@@ -745,7 +745,7 @@ input {
 .poll-group--open {
   padding: 10px 10px 12px;
   border: 1px solid var(--poll-accent-line);
-  border-left-width: 4px;
+  border-left-width: 2px;
   border-radius: 20px;
   background: linear-gradient(180deg, var(--poll-accent-soft), rgba(16, 26, 42, 0.38));
 }
@@ -1938,6 +1938,43 @@ input {
   text-decoration: none;
 }
 
+.mypage-profile-card,
+.mypage-stat-card,
+.mypage-poll-item,
+.mypage-danger-button {
+  transition:
+    transform 140ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+}
+
+.mypage-profile-card:hover,
+.mypage-stat-card:hover,
+.mypage-poll-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 229, 168, 0.42);
+  background: #172235;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+}
+
+.mypage-poll-item:hover .mypage-poll-item-arrow {
+  background: #00e5a8;
+  transform: translateX(2px);
+}
+
+.mypage-danger-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 102, 125, 0.58);
+  background: rgba(255, 102, 125, 0.16);
+}
+
+.mypage-poll-item:active,
+.mypage-danger-button:active {
+  transform: translateY(0) scale(0.99);
+}
+
 .mypage-poll-item strong,
 .mypage-poll-item span {
   display: block;
@@ -2642,8 +2679,9 @@ input {
 }
 
 .create-canvas .field-group .form-error {
-  position: absolute;
-  top: 72px;
+  position: static;
+  margin: 2px 0 0;
+  line-height: 16px;
 }
 
 .create-canvas .section-block {
