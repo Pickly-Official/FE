@@ -6,6 +6,7 @@ function PhotoGrid({
   onAddPhotos,
   onRemovePhoto,
   onComplete,
+  onEditPhotos,
   isProcessing = false,
   isComplete = false,
   maxPhotos = POLL_OPTIONS.maxPhotos,
@@ -14,6 +15,7 @@ function PhotoGrid({
   const inputRef = useRef(null);
   const canAddMore = photos.length < maxPhotos && !isProcessing && !isComplete;
   const hasEnoughPhotos = photos.length >= POLL_OPTIONS.minPhotos;
+  const isLocked = isProcessing || isComplete;
 
   const handleFileChange = (event) => {
     onAddPhotos(event.target.files);
@@ -32,9 +34,11 @@ function PhotoGrid({
           <article className="photo-tile photo-tile--preview" key={photo.id}>
             <img src={photo.previewUrl} alt={`업로드 사진 ${index + 1}`} />
             <span>{index + 1}</span>
-            <button type="button" onClick={() => onRemovePhoto(photo.id)} aria-label={`${index + 1}번 사진 삭제`}>
-              ×
-            </button>
+            {!isLocked && (
+              <button type="button" onClick={() => onRemovePhoto(photo.id)} aria-label={`${index + 1}번 사진 삭제`}>
+                ×
+              </button>
+            )}
           </article>
         ))}
 
@@ -75,10 +79,17 @@ function PhotoGrid({
         className={`photo-complete-button ${isComplete ? 'is-complete' : ''}`}
         type="button"
         onClick={onComplete}
-        disabled={isProcessing || !hasEnoughPhotos}
+        disabled={isProcessing || isComplete || !hasEnoughPhotos}
       >
         {isProcessing ? '위치 분석 중' : isComplete ? '위치 확인 완료' : '완료'}
       </button>
+
+      {isComplete && (
+        <button className="photo-edit-button" type="button" onClick={onEditPhotos}>
+          사진 다시 수정
+        </button>
+      )}
+
       <p className="helper-copy">
         {isComplete
           ? '위치 정보가 준비됐어요. 아래에서 확인하고 투표를 생성하세요.'

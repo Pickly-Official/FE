@@ -38,7 +38,7 @@ function HomePage() {
           <h1>
             오늘의
             <br />
-            <span>베스트컷</span>을 찾아보세요
+            <span>베스트컷</span>을 찾아보세요!
           </h1>
         </div>
 

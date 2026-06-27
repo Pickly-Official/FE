@@ -54,9 +54,15 @@ input {
   position: absolute;
   top: 74px;
   left: 50%;
-  width: 176px;
-  height: 177px;
+  width: 190px;
+  height: 191px;
   transform: translateX(-50%);
+}
+
+.brand-mark__svg {
+  display: block;
+  width: 190px;
+  height: 191px;
 }
 
 .brand-mark__shadow {
@@ -745,7 +751,6 @@ input {
 .poll-group--open {
   padding: 10px 10px 12px;
   border: 1px solid var(--poll-accent-line);
-  border-left-width: 2px;
   border-radius: 20px;
   background: linear-gradient(180deg, var(--poll-accent-soft), rgba(16, 26, 42, 0.38));
 }
@@ -2433,7 +2438,7 @@ input {
 .create-canvas {
   position: relative;
   width: min(100vw, 393px);
-  min-height: 852px;
+  min-height: 930px;
   padding: 0 14px 88px;
   background: #041124;
 }
@@ -2797,14 +2802,34 @@ input {
   font-weight: 700;
 }
 
+.create-canvas .photo-edit-button {
+  position: absolute;
+  left: 14px;
+  top: 586px;
+  width: 350px;
+  height: 38px;
+  border: 1px solid #1f2a3a;
+  border-radius: 10px;
+  background: #101a2a;
+  color: #dce5f5;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .create-canvas .photo-complete-button:disabled {
   opacity: 0.55;
+}
+
+.create-canvas .photo-complete-button.is-complete {
+  background: #101a2a;
+  color: #00e5a8;
+  box-shadow: inset 0 0 0 1px rgba(0, 229, 168, 0.36);
 }
 
 .create-canvas .helper-copy {
   position: absolute;
   left: 14px;
-  top: 586px;
+  top: 632px;
   width: 350px;
   margin: 0;
   color: #8ea0b3;
@@ -2878,7 +2903,7 @@ input {
 .create-canvas .location-analysis-panel {
   position: absolute;
   left: 14px;
-  top: 632px;
+  top: 676px;
   width: 350px;
 }
 
@@ -2922,7 +2947,7 @@ input {
 .create-canvas .location-panel-head strong {
   color: #ffffff;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 700;
   line-height: 19px;
 }
 
@@ -2936,16 +2961,20 @@ input {
 
 .create-canvas .location-group-list {
   display: grid;
-  gap: 16px;
-  margin-top: 10px;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .create-canvas .location-card {
-  min-height: 64px;
+  min-height: 58px;
   margin: 0;
   border: 1px solid #1f2a3a;
-  border-radius: 20px;
-  padding: 8px 22px 8px 42px;
+  border-radius: 16px;
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   background: #141e2e;
 }
 
@@ -2967,6 +2996,9 @@ input {
   color: #8ea0b3;
   font-size: 12px;
   font-weight: 400;
+  border: 0;
+  background: transparent;
+  white-space: nowrap;
 }
 
 .create-canvas .create-location-error {
@@ -2995,6 +3027,13 @@ input {
   font-size: 20px;
   font-weight: 700;
   box-shadow: none;
+}
+
+.create-canvas .sticky-cta:disabled {
+  background: #1a2433;
+  color: #708195;
+  opacity: 1;
+  box-shadow: inset 0 0 0 1px #263244;
 }
 
 @media (max-width: 392px) {
@@ -3040,6 +3079,7 @@ input {
 .create-canvas .photo-grid,
 .create-canvas .photo-workflow,
 .create-canvas .photo-complete-button,
+.create-canvas .photo-edit-button,
 .create-canvas .helper-copy,
 .create-canvas .location-pending-card,
 .create-canvas .location-analysis-panel,
@@ -3081,6 +3121,11 @@ input {
 .create-canvas .photo-complete-button {
   width: 350px;
   margin-top: 12px;
+}
+
+.create-canvas .photo-edit-button {
+  width: 350px;
+  margin-top: 8px;
 }
 
 .create-canvas .photo-workflow {

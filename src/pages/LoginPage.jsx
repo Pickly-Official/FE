@@ -3,6 +3,48 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
 import { authService } from "../services/authService";
 
+function LoginBrandIcon() {
+  return (
+    <svg className="brand-mark__svg" width="190" height="191" viewBox="0 0 190 191" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <g filter="url(#login-brand-filter-glow)">
+        <ellipse cx="95" cy="95.5" rx="88" ry="88.5" fill="url(#login-brand-gradient-glow)" />
+      </g>
+      <g filter="url(#login-brand-filter-shadow)">
+        <rect x="36" y="72.5472" width="90" height="90" rx="20" transform="rotate(-23.2641 36 72.5472)" fill="#125C5F" fillOpacity="0.5" shapeRendering="crispEdges" />
+      </g>
+      <rect x="54.9058" y="43.5658" width="93.6312" height="93.6313" rx="20" transform="rotate(7.92261 54.9058 43.5658)" fill="url(#login-brand-gradient-card)" />
+      <rect x="67.2858" y="59.9516" width="64.5689" height="64.5689" rx="18.5" transform="rotate(7.92261 67.2858 59.9516)" stroke="white" strokeWidth="3" />
+      <path d="M86.6167 98.8007L99.1652 114.245" stroke="black" strokeWidth="8" strokeLinecap="round" />
+      <path d="M128.408 90.1132L99.5902 113.937" stroke="black" strokeWidth="8" strokeLinecap="round" />
+      <defs>
+        <filter id="login-brand-filter-glow" x="0" y="0" width="190" height="191" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+          <feGaussianBlur stdDeviation="3.5" result="effect1_foregroundBlur_17_27" />
+        </filter>
+        <filter id="login-brand-filter-shadow" x="38.2681" y="43.2681" width="113.694" height="113.693" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+          <feOffset dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_17_27" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_17_27" result="shape" />
+        </filter>
+        <linearGradient id="login-brand-gradient-glow" x1="50.5" y1="24" x2="151.5" y2="161" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#0F4349" />
+          <stop offset="0.298077" stopColor="#111828" />
+        </linearGradient>
+        <linearGradient id="login-brand-gradient-card" x1="66.1629" y1="51.9614" x2="139.047" y2="130.992" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#0DD5B1" />
+          <stop offset="1" stopColor="#5974E9" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
 function GoogleIcon() {
   return (
     <svg className="google-login-icon" width="30" height="30" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
@@ -29,10 +71,7 @@ function LoginPage() {
     <main className="app-canvas login-canvas">
       <section className="login-hero">
         <div className="brand-mark" aria-hidden="true">
-          <div className="brand-mark__shadow" />
-          <div className="brand-mark__card">
-            <span />
-          </div>
+          <LoginBrandIcon />
         </div>
 
         <h1 className="brand-title">Pickly</h1>

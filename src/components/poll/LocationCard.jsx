@@ -4,8 +4,8 @@ function LocationCard({ locationGroups = [], onReset }) {
       <div className="location-panel-head">
         <span className="location-panel-icon" aria-hidden="true" />
         <div>
-          <strong>위치 정보 활용</strong>
-          <span>EXIF 기반으로 50m 단위 자동 그룹화됩니다. 포토스팟 통계에 활용돼요.</span>
+          <strong>위치 분석 결과</strong>
+          <span>사진의 위치 정보를 기준으로 가까운 포토스팟끼리 묶었어요.</span>
         </div>
       </div>
 

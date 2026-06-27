@@ -24,6 +24,7 @@ function CreatePollPage() {
   const [formErrors, setFormErrors] = useState({});
   const { photos, addPhotos, removePhoto, resetPhotos, error: imageError } = useImageUpload();
   const { createPoll, isCreating, error: createError } = usePoll();
+  const isReadyToCreate = title.trim().length > 0 && photos.length >= POLL_OPTIONS.minPhotos && locationGroups.length > 0;
 
   const resetLocationAnalysis = () => {
     setLocationGroups([]);
@@ -38,6 +39,17 @@ function CreatePollPage() {
   const handleRemovePhoto = (photoId) => {
     resetLocationAnalysis();
     removePhoto(photoId);
+  };
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+    setFormErrors((current) => {
+      if (!current.title) {
+        return current;
+      }
+
+      return { ...current, title: '' };
+    });
   };
 
   const handleAnalyzeLocation = () => {
@@ -116,7 +128,7 @@ function CreatePollPage() {
           value={title}
           maxLength={40}
           placeholder="투표의 제목을 작성해주세요!"
-          onChange={(event) => setTitle(event.target.value)}
+          onChange={handleTitleChange}
         />
         {formErrors.title && <p className="form-error">{formErrors.title}</p>}
       </label>
@@ -126,6 +138,7 @@ function CreatePollPage() {
         onAddPhotos={handleAddPhotos}
         onRemovePhoto={handleRemovePhoto}
         onComplete={handleAnalyzeLocation}
+        onEditPhotos={resetLocationAnalysis}
         isProcessing={isAnalyzingLocation}
         isComplete={locationGroups.length > 0}
         error={formErrors.photos || imageError}
@@ -149,8 +162,8 @@ function CreatePollPage() {
 
       {createError && <p className="form-error">{createError}</p>}
 
-      <button className="sticky-cta" type="button" onClick={handleSubmit} disabled={isCreating}>
-        {isCreating ? '생성 중' : '투표 생성'}
+      <button className="sticky-cta" type="button" onClick={handleSubmit} disabled={isCreating || !isReadyToCreate}>
+        {isCreating ? '생성 중' : isReadyToCreate ? '투표 생성' : '위치 확인 후 생성'}
       </button>
     </main>
   );
