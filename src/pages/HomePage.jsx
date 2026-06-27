@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const spots = [
@@ -17,6 +18,18 @@ const closedPolls = [
 ];
 
 function HomePage() {
+  const [openGroups, setOpenGroups] = useState({
+    active: true,
+    closed: false,
+  });
+
+  const toggleGroup = (group) => {
+    setOpenGroups((current) => ({
+      ...current,
+      [group]: !current[group],
+    }));
+  };
+
   return (
     <main className="app-canvas page-canvas">
       <header className="page-header">
@@ -70,31 +83,56 @@ function HomePage() {
           <h2>내 투표</h2>
           <span>{activePolls.length + closedPolls.length}개</span>
         </div>
-        <PollGroup title="진행중인 투표" polls={activePolls} />
-        <PollGroup title="종료된 투표" polls={closedPolls} />
+        <PollGroup
+          id="active"
+          title="진행중인 투표"
+          polls={activePolls}
+          isOpen={openGroups.active}
+          onToggle={toggleGroup}
+        />
+        <PollGroup
+          id="closed"
+          title="종료된 투표"
+          polls={closedPolls}
+          isOpen={openGroups.closed}
+          onToggle={toggleGroup}
+        />
       </section>
     </main>
   );
 }
 
-function PollGroup({ title, polls }) {
+function PollGroup({ id, title, polls, isOpen, onToggle }) {
   return (
     <section className="poll-group">
-      <div className="poll-group-header">
-        <h3>{title}</h3>
-        <span>{polls.length}개</span>
-      </div>
-      <div className="poll-list">
-        {polls.map((poll) => (
-          <Link className="poll-item" to={`/result/${poll.id}`} key={poll.id}>
-            <div>
-              <strong>{poll.title}</strong>
-              <span>{poll.status}</span>
-            </div>
-            <em>{poll.count}명</em>
-          </Link>
-        ))}
-      </div>
+      <button
+        className="poll-group-header"
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={`${id}-poll-list`}
+        onClick={() => onToggle(id)}
+      >
+        <span className="poll-group-title">
+          <strong>{title}</strong>
+          <em>{polls.length}개</em>
+        </span>
+        <span className={`poll-group-arrow ${isOpen ? 'is-open' : ''}`} aria-hidden="true">
+          ▾
+        </span>
+      </button>
+      {isOpen && (
+        <div className="poll-list" id={`${id}-poll-list`}>
+          {polls.map((poll) => (
+            <Link className="poll-item" to={`/result/${poll.id}`} key={poll.id}>
+              <div>
+                <strong>{poll.title}</strong>
+                <span>{poll.status}</span>
+              </div>
+              <em>{poll.count}명</em>
+            </Link>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
