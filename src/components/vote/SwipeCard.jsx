@@ -1,5 +1,113 @@
-function SwipeCard({ children }) {
-  return <div>{children}</div>;
+import { useRef, useState } from 'react';
+
+const SWIPE_THRESHOLD = 72;
+
+function SwipeCard({ photo, onSwipe }) {
+  const [drag, setDrag] = useState({ isDragging: false, startX: 0, x: 0 });
+  const [flyOut, setFlyOut] = useState(null);
+  const dragRef = useRef({ isDragging: false, startX: 0, x: 0 });
+
+  const resetDrag = () => {
+    dragRef.current = { isDragging: false, startX: 0, x: 0 };
+    setDrag({ isDragging: false, startX: 0, x: 0 });
+    setFlyOut(null);
+  };
+
+  const finishSwipe = (value) => {
+    if (flyOut) return;
+
+    setFlyOut(value);
+    window.setTimeout(() => {
+      onSwipe(value);
+      resetDrag();
+    }, 180);
+  };
+
+  const handlePointerDown = (event) => {
+    if (flyOut) return;
+
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+
+    const nextDrag = { isDragging: true, startX: event.clientX, x: 0 };
+    dragRef.current = nextDrag;
+    setDrag(nextDrag);
+  };
+
+  const handlePointerMove = (event) => {
+    if (!dragRef.current.isDragging || flyOut) return;
+
+    event.preventDefault();
+    const nextDrag = {
+      ...dragRef.current,
+      x: event.clientX - dragRef.current.startX,
+    };
+    dragRef.current = nextDrag;
+    setDrag(nextDrag);
+  };
+
+  const handlePointerUp = (event) => {
+    if (!dragRef.current.isDragging || flyOut) return;
+
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    const finalX = dragRef.current.x;
+
+    if (finalX >= SWIPE_THRESHOLD) {
+      finishSwipe('like');
+      return;
+    }
+
+    if (finalX <= -SWIPE_THRESHOLD) {
+      finishSwipe('skip');
+      return;
+    }
+
+    resetDrag();
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'ArrowRight') {
+      finishSwipe('like');
+    }
+
+    if (event.key === 'ArrowLeft') {
+      finishSwipe('skip');
+    }
+  };
+
+  const dragX = flyOut === 'like' ? 360 : flyOut === 'skip' ? -360 : drag.x;
+  const rotate = Math.max(Math.min(dragX / 14, 16), -16);
+  const likeOpacity = Math.min(Math.max(dragX / 110, 0), 1);
+  const skipOpacity = Math.min(Math.max(-dragX / 110, 0), 1);
+
+  return (
+    <section
+      className={`swipe-card ${drag.isDragging ? 'is-dragging' : ''} ${flyOut ? `is-flyout-${flyOut}` : ''}`}
+      role="button"
+      tabIndex={0}
+      aria-label="사진 카드를 좌우로 밀어 평가"
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      onKeyDown={handleKeyDown}
+      style={{
+        transform: `translateX(${dragX}px) rotate(${rotate}deg)`,
+        '--like-opacity': likeOpacity,
+        '--skip-opacity': skipOpacity,
+      }}
+    >
+      <span className="swipe-label swipe-label--skip">SKIP</span>
+      <span className="swipe-label swipe-label--like">LIKE</span>
+      <div className={`mock-photo mock-photo--${photo.tone}`}>
+        <span>{photo.label}</span>
+        <em>{photo.description}</em>
+      </div>
+    </section>
+  );
 }
 
 export default SwipeCard;
