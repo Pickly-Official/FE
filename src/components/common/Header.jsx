@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { ROUTES } from "../../constants/routes";
+import PicklyTopBar from "./PicklyTopBar";
 
 function Header({ title = "Pickly", showBack = false, rightContent }) {
   const navigate = useNavigate();
@@ -8,6 +9,10 @@ function Header({ title = "Pickly", showBack = false, rightContent }) {
   const handleBack = () => {
     navigate(-1);
   };
+
+  if (!showBack && !rightContent && title === "Pickly") {
+    return <PicklyTopBar active="home" />;
+  }
 
   return (
     <header className="header">

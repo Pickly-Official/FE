@@ -30,56 +30,64 @@ function HomePage() {
 
   return (
     <AppLayout headerTitle="Pickly">
-      <section className="home-page">
-        <div className="home-title-area">
-          <p className="home-subtitle">안녕하세요 👋</p>
-          <h2>
-            오늘은 어떤 <span>베스트컷</span>을 찾아볼까요?
-          </h2>
+      <section className="home-screen">
+        <div className="hero-copy">
+          <p className="eyebrow">친구들의 반응으로</p>
+          <h1>
+            오늘은 어떤
+            <br />
+            <span>베스트컷</span>을 찾아볼까요?
+          </h1>
         </div>
 
         {errorMessage && <p className="home-error-message">{errorMessage}</p>}
 
-        <div className="home-stats">
-          <div className="home-stat-card">
-            <p>누적 참여자</p>
+        <div className="metric-grid">
+          <div className="metric-card">
+            <span>누적 참여자</span>
             <strong>{statistics?.totalParticipants || "-"}</strong>
           </div>
 
-          <div className="home-stat-card">
-            <p>오늘 생성 투표</p>
+          <div className="metric-card">
+            <span>오늘 생성 투표</span>
             <strong>{statistics?.todayPolls || "-"}</strong>
           </div>
         </div>
 
-        <section className="home-popular-section">
-          <h3>🔥 이번 주 인기 포토스팟</h3>
+        <section className="section-block">
+          <div className="section-title">
+            <h2>이번 주 인기 포토스팟</h2>
+            <span>추천율 기준</span>
+          </div>
 
-          <div className="popular-card-list">
-            {popularSpots.map((spot) => (
-              <article key={spot.id} className="popular-card">
-                <div className="popular-rank-badge">{spot.rank}위</div>
+          <div className="spot-list">
+            {popularSpots.map((spot, index) => (
+              <article key={spot.id} className="spot-card">
+                <div className={`spot-photo ${index === 1 ? 'spot-photo--cafe' : 'spot-photo--forest'}`}>
+                  <div className="rank-badge">{spot.rank}</div>
+                </div>
 
-                {spot.imageUrl ? (
-                  <img className="popular-image-box" src={spot.imageUrl} alt={spot.name} />
-                ) : (
-                  <div className="popular-image-box" />
-                )}
-
-                <div className="popular-info">
-                  <strong>{spot.name}</strong>
-                  <span>추천율 {spot.recommendRate}%</span>
+                <div className="spot-card-body">
+                  <h3>{spot.name}</h3>
+                  <strong>{spot.recommendRate}%</strong>
+                  <div>
+                    {(spot.tags || []).map((tag) => (
+                      <span className="tag" key={tag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </article>
             ))}
           </div>
         </section>
 
-        <button type="button" className="home-create-button" onClick={() => navigate(ROUTES.CREATE)}>
-          📸 새 투표 만들기
+        <button type="button" className="primary-cta" onClick={() => navigate(ROUTES.CREATE)}>
+          새 투표 만들기
         </button>
 
-        <section className="home-accordion-section">
+        <section className="section-block">
           <PollGroup title="내 진행중인 투표" polls={activePolls} defaultOpen onMovePoll={movePoll} />
 
           <PollGroup title="내 종료된 투표" polls={closedPolls} onMovePoll={movePoll} />
@@ -91,14 +99,18 @@ function HomePage() {
 
 function PollGroup({ title, polls, defaultOpen = false, onMovePoll }) {
   return (
-    <details className="home-accordion" open={defaultOpen}>
-      <summary>
-        {title} ({polls.length})
+    <details className="poll-group" open={defaultOpen}>
+      <summary className="poll-group-header">
+        <span className="poll-group-title">
+          <strong>{title}</strong>
+          <em>{polls.length}개</em>
+        </span>
+        <span className="poll-group-arrow">⌄</span>
       </summary>
 
-      <div className="home-poll-list">
+      <div className="poll-list">
         {polls.map((poll) => (
-          <button key={poll.id} type="button" onClick={() => onMovePoll(poll)}>
+          <button key={poll.id} className="poll-item" type="button" onClick={() => onMovePoll(poll)}>
             <div>
               <strong>{poll.title}</strong>
               <span>{poll.description}</span>

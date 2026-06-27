@@ -2,33 +2,48 @@ import { useEffect, useRef, useState } from 'react';
 
 const SWIPE_THRESHOLD = 72;
 
-function SwipeCard({ photo, onSwipe }) {
+function SwipeCard({ photo, photoKey, onSwipe }) {
   const [drag, setDrag] = useState({ isDragging: false, startX: 0, x: 0 });
   const [flyOut, setFlyOut] = useState(null);
   const dragRef = useRef({ isDragging: false, startX: 0, x: 0 });
+  const flyOutRef = useRef(null);
+  const timeoutRef = useRef(null);
 
   const resetDrag = () => {
     dragRef.current = { isDragging: false, startX: 0, x: 0 };
     setDrag({ isDragging: false, startX: 0, x: 0 });
     setFlyOut(null);
+    flyOutRef.current = null;
   };
 
   useEffect(() => {
+    if (timeoutRef.current) {
+      window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
     resetDrag();
-  }, [photo?.id]);
+
+    return () => {
+      if (timeoutRef.current) {
+        window.clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, [photoKey, photo?.id, photo?.imageUrl, photo?.previewUrl, photo?.label]);
 
   const finishSwipe = (value) => {
-    if (flyOut) return;
+    if (flyOutRef.current) return;
 
+    flyOutRef.current = value;
     setFlyOut(value);
-    window.setTimeout(() => {
+    timeoutRef.current = window.setTimeout(() => {
       onSwipe(value);
-      resetDrag();
+      timeoutRef.current = null;
     }, 180);
   };
 
   const handlePointerDown = (event) => {
-    if (flyOut) return;
+    if (flyOutRef.current) return;
 
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -39,7 +54,7 @@ function SwipeCard({ photo, onSwipe }) {
   };
 
   const handlePointerMove = (event) => {
-    if (!dragRef.current.isDragging || flyOut) return;
+    if (!dragRef.current.isDragging || flyOutRef.current) return;
 
     event.preventDefault();
     const nextDrag = {
@@ -51,7 +66,7 @@ function SwipeCard({ photo, onSwipe }) {
   };
 
   const handlePointerUp = (event) => {
-    if (!dragRef.current.isDragging || flyOut) return;
+    if (!dragRef.current.isDragging || flyOutRef.current) return;
 
     if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
@@ -108,10 +123,10 @@ function SwipeCard({ photo, onSwipe }) {
       <span className="swipe-label swipe-label--skip">SKIP</span>
       <span className="swipe-label swipe-label--like">LIKE</span>
       <div className={`mock-photo ${photo.tone ? `mock-photo--${photo.tone}` : ''}`}>
-        {imageUrl && <img className="swipe-photo-image" src={imageUrl} alt={photo.label || '평가할 사진'} draggable="false" />}
+        {imageUrl && <img className="swipe-photo-image" src={imageUrl} alt={photo?.label || '평가할 사진'} draggable="false" />}
         <div className="swipe-photo-caption">
-          <span>{photo.label}</span>
-          <em>{photo.description}</em>
+          <span>{photo?.label}</span>
+          <em>{photo?.description}</em>
         </div>
       </div>
     </section>

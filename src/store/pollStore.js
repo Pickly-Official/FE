@@ -18,10 +18,16 @@ const readStoredPolls = () => {
 
 const writeStoredPolls = (polls) => {
   if (!canUseStorage()) {
-    return;
+    return false;
   }
 
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(polls));
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(polls));
+    return true;
+  } catch (error) {
+    console.warn('투표를 브라우저 저장소에 저장하지 못했습니다.', error);
+    return false;
+  }
 };
 
 export const pollStore = {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import PicklyTopBar from '../components/common/PicklyTopBar';
 import AiAnalysisCard from '../components/result/AiAnalysisCard';
 import BestCutRanking from '../components/result/BestCutRanking';
 import ResultImageSaveButton from '../components/result/ResultImageSaveButton';
@@ -37,14 +38,13 @@ function ResultPage() {
 
   return (
     <main className="app-canvas page-canvas result-canvas">
-      <header className="page-header">
-        <div>
-          <p className="eyebrow">결과</p>
-          <h1>{result.title}</h1>
-          <span className="muted-line">{result.location} · 참여자 {formatVoteCount(result.participantCount)}</span>
-        </div>
-        <Link className="icon-button" to="/home" aria-label="홈으로">⌂</Link>
-      </header>
+      <PicklyTopBar />
+
+      <div className="screen-title screen-title--compact">
+        <p className="eyebrow">결과</p>
+        <h1>{result.title}</h1>
+        <span className="muted-line">{result.location} · 참여자 {formatVoteCount(result.participantCount)}</span>
+      </div>
 
       <AiAnalysisCard analysis={result.analysis} />
       <BestCutRanking rankings={result.rankings} />

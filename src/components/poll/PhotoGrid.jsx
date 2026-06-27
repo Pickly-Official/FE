@@ -5,6 +5,9 @@ function PhotoGrid({
   photos,
   onAddPhotos,
   onRemovePhoto,
+  onComplete,
+  isProcessing = false,
+  isComplete = false,
   maxPhotos = POLL_OPTIONS.maxPhotos,
   error = '',
 }) {
@@ -20,7 +23,7 @@ function PhotoGrid({
     <section className="section-block">
       <div className="section-title">
         <h2>사진 업로드</h2>
-        <span>{photos.length}/{maxPhotos}</span>
+        <span>{photos.length} / {maxPhotos}</span>
       </div>
 
       <div className="photo-grid">
@@ -51,7 +54,15 @@ function PhotoGrid({
       />
 
       {error && <p className="form-error">{error}</p>}
-      <p className="helper-copy">사진은 최소 {POLL_OPTIONS.minPhotos}장, 최대 {maxPhotos}장까지 추가할 수 있어요.</p>
+      <button
+        className={`photo-complete-button ${isComplete ? 'is-complete' : ''}`}
+        type="button"
+        onClick={onComplete}
+        disabled={isProcessing || photos.length < POLL_OPTIONS.minPhotos}
+      >
+        {isProcessing ? '처리 중' : isComplete ? '완료됨' : '완료'}
+      </button>
+      <p className="helper-copy">사진 업로드 후 완료를 누르면 위치 정보가 분석돼요.</p>
     </section>
   );
 }

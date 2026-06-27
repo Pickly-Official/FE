@@ -11,7 +11,8 @@ export function usePoll() {
 
     try {
       return await pollService.create(poll);
-    } catch {
+    } catch (error) {
+      console.error('투표 생성 실패', error);
       setError('투표 생성 중 문제가 발생했어요.');
       return { ok: false };
     } finally {
