@@ -6,19 +6,14 @@ import PhotoGrid from '../components/poll/PhotoGrid';
 import { POLL_OPTIONS } from '../constants/pollOptions';
 import { useImageUpload } from '../hooks/useImageUpload';
 import { usePoll } from '../hooks/usePoll';
+import { analyzePhotoLocations } from '../services/locationService';
 import { validatePoll } from '../utils/validatePoll';
-
-const locationCandidates = ['서울숲 근처', '성수 카페거리 근처', '한강공원 근처'];
-const mockLocationGroups = [
-  { name: '서울숲', photos: '1, 2, 4번' },
-  { name: '엔트러사이트 한남점', photos: '3번' },
-];
 
 function CreatePollPage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [deadlineHours, setDeadlineHours] = useState(POLL_OPTIONS.durations[1].value);
-  const [locationName, setLocationName] = useState('서울숲 근처');
+  const [locationName, setLocationName] = useState('');
   const [isAnalyzingLocation, setIsAnalyzingLocation] = useState(false);
   const [locationGroups, setLocationGroups] = useState([]);
   const [formErrors, setFormErrors] = useState({});
@@ -53,7 +48,7 @@ function CreatePollPage() {
     });
   };
 
-  const handleAnalyzeLocation = () => {
+  const handleAnalyzeLocation = async () => {
     if (photos.length < POLL_OPTIONS.minPhotos) {
       setFormErrors((current) => ({
         ...current,
@@ -65,12 +60,38 @@ function CreatePollPage() {
     setFormErrors((current) => ({ ...current, photos: '' }));
     setIsAnalyzingLocation(true);
 
-    window.setTimeout(() => {
-      setLocationGroups(mockLocationGroups);
-      setLocationName(mockLocationGroups[0].name);
-      setFormErrors((current) => ({ ...current, location: '' }));
+    try {
+      const result = await analyzePhotoLocations(photos);
+
+      if (result.groups.length === 0) {
+        setLocationGroups([]);
+        setLocationName('');
+        setFormErrors((current) => ({
+          ...current,
+          location: '사진에서 GPS 위치 정보를 찾지 못했어요. 위치 정보가 포함된 원본 사진을 올려주세요.',
+        }));
+        return;
+      }
+
+      setLocationGroups(result.groups);
+      setLocationName(result.groups[0].name);
+      setFormErrors((current) => ({
+        ...current,
+        photos: result.missingGpsSequences.length > 0
+          ? `GPS가 없는 사진: ${result.missingGpsSequences.map((sequence) => `${sequence}번`).join(', ')}`
+          : '',
+        location: '',
+      }));
+    } catch (error) {
+      setLocationGroups([]);
+      setLocationName('');
+      setFormErrors((current) => ({
+        ...current,
+        location: error.message || '위치 분석 중 문제가 발생했어요.',
+      }));
+    } finally {
       setIsAnalyzingLocation(false);
-    }, 600);
+    }
   };
 
   const handleSubmit = async () => {
@@ -149,10 +170,8 @@ function CreatePollPage() {
       {locationGroups.length > 0 ? (
         <LocationCard
           locationGroups={locationGroups}
-          onReset={() => {
-            const currentIndex = locationCandidates.indexOf(locationName);
-            setLocationName(locationCandidates[(currentIndex + 1) % locationCandidates.length]);
-          }}
+          selectedLocation={locationName}
+          onReset={setLocationName}
         />
       ) : (
         <section className={`location-pending-card ${formErrors.location ? 'is-error' : ''}`}>

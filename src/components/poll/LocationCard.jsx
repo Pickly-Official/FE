@@ -1,4 +1,4 @@
-function LocationCard({ locationGroups = [], onReset }) {
+function LocationCard({ locationGroups = [], selectedLocation = '', onReset }) {
   return (
     <section className="location-panel location-analysis-panel">
       <div className="location-panel-head">
@@ -10,17 +10,21 @@ function LocationCard({ locationGroups = [], onReset }) {
       </div>
 
       <div className="location-group-list">
-        {locationGroups.map((group) => (
-          <article className="location-card" key={group.name}>
+        {locationGroups.map((group) => {
+          const isSelected = group.name === selectedLocation;
+
+          return (
+          <article className={`location-card ${isSelected ? 'is-selected' : ''}`} key={group.name}>
             <div>
               <strong>{group.name}</strong>
               <span>{group.photos}</span>
             </div>
-            <button type="button" onClick={() => onReset?.(group.name)}>
-              재설정
+            <button type="button" onClick={() => onReset?.(group.name)} disabled={isSelected}>
+              {isSelected ? '선택됨' : '선택'}
             </button>
           </article>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
