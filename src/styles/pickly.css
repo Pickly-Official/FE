@@ -3893,6 +3893,39 @@ input {
   letter-spacing: 0;
 }
 
+.home-screen .metric-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 10px;
+}
+
+.home-screen .metric-card {
+  min-width: 0;
+  min-height: 88px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 14px;
+}
+
+.home-screen .metric-card span,
+.home-screen .metric-card strong {
+  width: 100%;
+  text-align: center;
+}
+
+.home-screen .metric-card span {
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.home-screen .metric-card strong {
+  margin-top: 8px;
+  font-size: 24px;
+  line-height: 28px;
+}
+
 .hero-copy h1 span {
   background: linear-gradient(100deg, #00e5a0 8%, #50f0d4 38%, #6378ff 92%);
   -webkit-background-clip: text;
