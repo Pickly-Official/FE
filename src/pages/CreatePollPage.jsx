@@ -1,11 +1,61 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DeadlineSelector from '../components/poll/DeadlineSelector';
+import LocationCard from '../components/poll/LocationCard';
+import PhotoGrid from '../components/poll/PhotoGrid';
+import { POLL_OPTIONS } from '../constants/pollOptions';
+import { useImageUpload } from '../hooks/useImageUpload';
+import { usePoll } from '../hooks/usePoll';
+import { validatePoll } from '../utils/validatePoll';
 
-const deadlines = ['24시간', '3일', '7일'];
+const locationCandidates = ['서울숲 근처', '성수 카페거리 근처', '한강공원 근처'];
 
 function CreatePollPage() {
   const navigate = useNavigate();
-  const [deadline, setDeadline] = useState('3일');
+  const [title, setTitle] = useState('');
+  const [deadlineHours, setDeadlineHours] = useState(POLL_OPTIONS.durations[1].value);
+  const [useLocation, setUseLocation] = useState(true);
+  const [locationName, setLocationName] = useState('서울숲 근처');
+  const [formErrors, setFormErrors] = useState({});
+  const { photos, addPhotos, removePhoto, resetPhotos, error: imageError } = useImageUpload();
+  const { createPoll, isCreating, error: createError } = usePoll();
+
+  const handleSubmit = async () => {
+    const poll = {
+      title,
+      photos,
+      deadlineHours,
+      location: useLocation ? locationName : '',
+    };
+    const validation = validatePoll(poll);
+    setFormErrors(validation.errors);
+
+    if (!validation.isValid) {
+      return;
+    }
+
+    const result = await createPoll({
+      ...poll,
+      title: title.trim(),
+      photos: photos.map(({ id, file, name, previewUrl }) => ({
+        id,
+        file,
+        name,
+        previewUrl,
+      })),
+    });
+
+    if (result.ok) {
+      resetPhotos();
+      navigate(`/share/${result.id}`, {
+        state: {
+          title: title.trim(),
+          photoCount: photos.length,
+          deadlineHours,
+        },
+      });
+    }
+  };
 
   return (
     <main className="app-canvas page-canvas create-canvas">
@@ -18,57 +68,39 @@ function CreatePollPage() {
 
       <label className="field-group">
         <span>투표 제목</span>
-        <input type="text" placeholder="투표의 제목을 작성해주세요!" />
+        <input
+          type="text"
+          value={title}
+          maxLength={40}
+          placeholder="투표의 제목을 작성해주세요!"
+          onChange={(event) => setTitle(event.target.value)}
+        />
+        {formErrors.title && <p className="form-error">{formErrors.title}</p>}
       </label>
 
-      <section className="section-block">
-        <div className="section-title">
-          <h2>사진 업로드</h2>
-          <span>2/10</span>
-        </div>
-        <div className="photo-grid">
-          <div className="photo-tile photo-tile--filled">1</div>
-          <div className="photo-tile photo-tile--filled">2</div>
-          <button className="photo-tile photo-tile--add" type="button">+</button>
-        </div>
-      </section>
+      <PhotoGrid
+        photos={photos}
+        onAddPhotos={addPhotos}
+        onRemovePhoto={removePhoto}
+        error={formErrors.photos || imageError}
+      />
 
-      <section className="location-panel">
-        <div>
-          <strong>위치 정보 활용</strong>
-          <span>EXIF 기준으로 50m 단위 자동 그룹화</span>
-        </div>
-        <input type="checkbox" defaultChecked aria-label="위치 정보 활용" />
-      </section>
+      <LocationCard
+        enabled={useLocation}
+        onEnabledChange={setUseLocation}
+        locationName={locationName}
+        onReset={() => {
+          const currentIndex = locationCandidates.indexOf(locationName);
+          setLocationName(locationCandidates[(currentIndex + 1) % locationCandidates.length]);
+        }}
+      />
 
-      <section className="location-card">
-        <div>
-          <span>자동 그룹</span>
-          <strong>서울숲 근처</strong>
-        </div>
-        <button type="button">재설정</button>
-      </section>
+      <DeadlineSelector value={deadlineHours} onChange={setDeadlineHours} error={formErrors.deadline} />
 
-      <section className="section-block">
-        <div className="section-title">
-          <h2>마감일</h2>
-        </div>
-        <div className="segmented-control">
-          {deadlines.map((item) => (
-            <button
-              className={deadline === item ? 'is-active' : ''}
-              type="button"
-              key={item}
-              onClick={() => setDeadline(item)}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      </section>
+      {createError && <p className="form-error">{createError}</p>}
 
-      <button className="sticky-cta" type="button" onClick={() => navigate('/share/demo')}>
-        투표 생성
+      <button className="sticky-cta" type="button" onClick={handleSubmit} disabled={isCreating}>
+        {isCreating ? '생성 중' : '투표 생성'}
       </button>
     </main>
   );
