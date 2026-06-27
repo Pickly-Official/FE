@@ -33,14 +33,14 @@ function LoginPage() {
         스와이프 한 번이면 충분해요. AI가 이유까지 알려드려요.
       </p>
 
-      <div className="social-button-frame">
+      <div className="kakao-login-frame">
         {SOCIAL_LOGIN_TYPES.map((item) => (
           <button
             key={item.provider}
             type="button"
-            className={`social-login-button ${item.provider}`}
+            className="kakao-login-button"
             onClick={() => handleSocialLogin(item.provider)}
-            aria-label={`${item.label} 로그인`}
+            aria-label={item.label}
           >
             {item.text}
           </button>

@@ -1,6 +1,7 @@
-export const SOCIAL_LOGIN_OPTIONS = [
-  { id: 'google', label: 'Google' },
-  { id: 'kakao', label: 'Kakao' },
-  { id: 'naver', label: 'Naver' },
-  { id: 'apple', label: 'Apple' },
+export const SOCIAL_LOGIN_TYPES = [
+  {
+    provider: "kakao",
+    label: "카카오톡으로 시작하기",
+    text: "카카오톡으로 시작하기",
+  },
 ];

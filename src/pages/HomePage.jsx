@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
 import AppLayout from "../components/layout/AppLayout";
-import Button from "../components/common/Button";
-import Card from "../components/common/Card";
 import { ROUTES } from "../constants/routes";
 
 const popularSpots = [
@@ -10,31 +8,27 @@ const popularSpots = [
     rank: 1,
     name: "성수동 서울숲",
     recommendRate: 89,
-    tags: ["감성", "자연광", "데이트"],
+    tags: ["감성", "자연광"],
   },
   {
     rank: 2,
-    name: "한강공원",
-    recommendRate: 82,
-    tags: ["노을", "야경", "산책"],
-  },
-  {
-    rank: 3,
-    name: "경복궁",
-    recommendRate: 76,
-    tags: ["전통", "여행", "한복"],
+    name: "엔트러사이트 한남점",
+    recommendRate: 78,
+    tags: ["카페", "실내"],
   },
 ];
 
 const activePolls = [
   {
     id: 1,
-    title: "이번 주말 인스타 업로드용",
+    title: "이번 주말 인스타 업로드용✨",
+    description: "마감 3일 남음 · 8장",
     role: "OWNER",
   },
   {
     id: 2,
-    title: "프로필 사진 뭐가 나아?",
+    title: "우정사진 뭐가 좋아?",
+    description: "마감 1일 남음 · 7장",
     role: "VOTER",
   },
 ];
@@ -42,22 +36,8 @@ const activePolls = [
 const closedPolls = [
   {
     id: 3,
-    title: "서울숲 베스트컷 고르기",
-    role: "OWNER",
-  },
-  {
-    id: 4,
-    title: "여행 사진 골라줘",
-    role: "OWNER",
-  },
-  {
-    id: 5,
-    title: "카페 사진 투표",
-    role: "VOTER",
-  },
-  {
-    id: 6,
-    title: "야경 사진 추천",
+    title: "내 졸업사진 뽑기",
+    description: "총 12명 참여",
     role: "OWNER",
   },
 ];
@@ -77,76 +57,76 @@ function HomePage() {
   return (
     <AppLayout headerTitle="Pickly">
       <section className="home-page">
-        <div className="home-greeting">
-          <p>안녕하세요 👋</p>
-          <h2>오늘은 어떤 베스트컷을 찾아볼까요?</h2>
+        <div className="home-title-area">
+          <p className="home-subtitle">안녕하세요 👋</p>
+          <h2>
+            오늘은 어떤 <span>베스트컷</span>을 찾아볼까요?
+          </h2>
         </div>
 
         <div className="home-stats">
-          <Card className="home-stat-card">
+          <div className="home-stat-card">
             <p>누적 참여자</p>
             <strong>1,234명</strong>
-          </Card>
+          </div>
 
-          <Card className="home-stat-card">
+          <div className="home-stat-card">
             <p>오늘 생성 투표</p>
-            <strong>12개</strong>
-          </Card>
+            <strong>83개</strong>
+          </div>
         </div>
 
-        <section className="home-section">
+        <section className="home-popular-section">
           <h3>🔥 이번 주 인기 포토스팟</h3>
 
-          <div className="popular-spot-list">
+          <div className="popular-card-list">
             {popularSpots.map((spot) => (
-              <Card key={spot.rank} className="popular-spot-card">
-                <div className="popular-spot-header">
-                  <strong>
-                    {spot.rank}위. {spot.name}
-                  </strong>
+              <article key={spot.rank} className="popular-card">
+                <div className="popular-rank-badge">{spot.rank}위</div>
+
+                <div className="popular-image-box" />
+
+                <div className="popular-info">
+                  <strong>{spot.name}</strong>
                   <span>추천율 {spot.recommendRate}%</span>
                 </div>
-
-                <div className="popular-spot-tags">
-                  {spot.tags.map((tag) => (
-                    <span key={tag}>#{tag}</span>
-                  ))}
-                </div>
-              </Card>
+              </article>
             ))}
           </div>
         </section>
 
-        <Button
-          variant="primary"
-          size="large"
-          fullWidth
-          className="home-create-button"
-          onClick={() => navigate(ROUTES.CREATE)}
-        >
-          + 새 투표 만들기
-        </Button>
+        <button type="button" className="home-create-button" onClick={() => navigate(ROUTES.CREATE)}>
+          📸 새 투표 만들기
+        </button>
 
-        <section className="home-section">
+        <section className="home-accordion-section">
           <details className="home-accordion" open>
-            <summary>내 진행중인 투표 ({activePolls.length}개)</summary>
+            <summary>내 진행중인 투표 ({activePolls.length})</summary>
 
             <div className="home-poll-list">
               {activePolls.map((poll) => (
                 <button key={poll.id} type="button" onClick={() => movePoll(poll)}>
-                  {poll.title}
+                  <div>
+                    <strong>{poll.title}</strong>
+                    <span>{poll.description}</span>
+                  </div>
+                  <em>›</em>
                 </button>
               ))}
             </div>
           </details>
 
           <details className="home-accordion">
-            <summary>내 종료된 투표 ({closedPolls.length}개)</summary>
+            <summary>내 종료된 투표 ({closedPolls.length})</summary>
 
             <div className="home-poll-list">
               {closedPolls.map((poll) => (
                 <button key={poll.id} type="button" onClick={() => movePoll(poll)}>
-                  {poll.title}
+                  <div>
+                    <strong>{poll.title}</strong>
+                    <span>{poll.description}</span>
+                  </div>
+                  <em>›</em>
                 </button>
               ))}
             </div>
