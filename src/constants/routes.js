@@ -1,9 +1,9 @@
 export const ROUTES = {
   LOGIN: '/',
   HOME: '/home',
-  CREATE: '/home/create',
-  SHARE: '/home/create/share/:id',
+  CREATE: '/create',
+  SHARE: '/share/:id',
   VOTE: '/vote/:id',
-  RESULT: '/home/result/:id',
-  MYPAGE: '/home/mypage',
+  RESULT: '/result/:id',
+  MYPAGE: '/mypage',
 };

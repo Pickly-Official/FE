@@ -5,5 +5,15 @@ export default defineConfig({
     server: {
         host: '0.0.0.0',
         port: 3000,
+        proxy: {
+            '/api': {
+                target: 'http://15.164.97.188:8080',
+                changeOrigin: true,
+            },
+            '/oauth2': {
+                target: 'http://15.164.97.188:8080',
+                changeOrigin: true,
+            },
+        },
     },
 });

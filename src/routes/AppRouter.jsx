@@ -16,12 +16,13 @@ function AppRouter() {
         <Route path="/create" element={<CreatePollPage />} />
         <Route path="/share/:id" element={<SharePage />} />
         <Route path="/result/:id" element={<ResultPage />} />
-        <Route path="/home/create" element={<CreatePollPage />} />
+        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/home/create" element={<Navigate to="/create" replace />} />
         <Route path="/home/create/share/:id" element={<SharePage />} />
         <Route path="/home/create/share/:id/vote" element={<VotePage />} />
         <Route path="/home/create/share/:id/result" element={<ResultPage />} />
         <Route path="/home/result/:id" element={<ResultPage />} />
-        <Route path="/home/mypage" element={<MyPage />} />
+        <Route path="/home/mypage" element={<Navigate to="/mypage" replace />} />
         <Route path="/vote/:id" element={<VotePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

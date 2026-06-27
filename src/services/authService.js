@@ -1,23 +1,21 @@
+import { API_ORIGIN, hasApiBaseUrl } from "./api";
+
 export const authService = {
   startSocialLogin: (provider) => {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-    if (!baseUrl) {
+    if (!hasApiBaseUrl) {
       console.log(`${provider} 로그인 요청`);
       return;
     }
 
-    window.location.href = `${baseUrl}/auth/oauth/${provider}`;
+    window.location.href = `${API_ORIGIN}/oauth2/authorization/${provider}`;
   },
 
   getMyInfo: async () => {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-    if (!baseUrl) {
+    if (!hasApiBaseUrl) {
       return null;
     }
 
-    const response = await fetch(`${baseUrl}/users/me`, {
+    const response = await fetch(`${API_ORIGIN}/api/users/me`, {
       credentials: "include",
     });
 
@@ -29,13 +27,11 @@ export const authService = {
   },
 
   logout: async () => {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-    if (!baseUrl) {
+    if (!hasApiBaseUrl) {
       return { ok: true };
     }
 
-    const response = await fetch(`${baseUrl}/auth/logout`, {
+    const response = await fetch(`${API_ORIGIN}/api/auth/logout`, {
       method: "POST",
       credentials: "include",
     });
