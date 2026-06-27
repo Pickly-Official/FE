@@ -1,143 +1,113 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-const spots = [
-  { name: '서울숲', rate: '92%', tags: ['감성', '초록', '햇살'], tone: 'forest' },
-  { name: '성수 카페거리', rate: '88%', tags: ['카페', '인물'], tone: 'cafe' },
-  { name: '한강공원', rate: '84%', tags: ['야경', '피크닉'], tone: 'river' },
-];
-
-const activePolls = [
-  { id: 'demo', title: '프로필 사진 골라줘', status: '마감까지 2일', count: 12 },
-  { id: 'cafe', title: '카페 업로드 사진', status: '마감까지 6시간', count: 9 },
-];
-
-const closedPolls = [
-  { id: 'summer', title: '여행 업로드 컷', status: '종료됨', count: 28 },
-  { id: 'profile', title: '새 프로필 후보', status: '종료됨', count: 43 },
-];
+import AppLayout from "../components/layout/AppLayout";
+import Loading from "../components/common/Loading";
+import { ROUTES } from "../constants/routes";
+import { useHome } from "../hooks/useHome";
 
 function HomePage() {
-  const [openGroups, setOpenGroups] = useState({
-    active: true,
-    closed: false,
-  });
+  const navigate = useNavigate();
+  const { homeData, isLoading, errorMessage } = useHome();
 
-  const toggleGroup = (group) => {
-    setOpenGroups((current) => ({
-      ...current,
-      [group]: !current[group],
-    }));
+  const { statistics, popularSpots, activePolls, closedPolls } = homeData;
+
+  const movePoll = (poll) => {
+    if (poll.role === "OWNER") {
+      navigate(`${ROUTES.RESULT.replace(":id", poll.id)}`);
+      return;
+    }
+
+    navigate(`${ROUTES.VOTE.replace(":id", poll.id)}`);
   };
 
+  if (isLoading) {
+    return (
+      <AppLayout headerTitle="Pickly">
+        <Loading text="홈 데이터를 불러오는 중..." />
+      </AppLayout>
+    );
+  }
+
   return (
-    <main className="app-canvas page-canvas">
-      <header className="page-header">
-        <div>
-          <p className="eyebrow">Pickly</p>
-          <h1>오늘의 베스트컷을 골라볼까요?</h1>
+    <AppLayout headerTitle="Pickly">
+      <section className="home-page">
+        <div className="home-title-area">
+          <p className="home-subtitle">안녕하세요 👋</p>
+          <h2>
+            오늘은 어떤 <span>베스트컷</span>을 찾아볼까요?
+          </h2>
         </div>
-        <Link className="profile-chip" to="/home/mypage" aria-label="마이페이지">
-          P
-        </Link>
-      </header>
 
-      <section className="metric-grid" aria-label="통계">
-        <article className="metric-card">
-          <span>누적 참여자</span>
-          <strong>1,284</strong>
-        </article>
-        <article className="metric-card">
-          <span>오늘 생성 투표</span>
-          <strong>37</strong>
-        </article>
+        {errorMessage && <p className="home-error-message">{errorMessage}</p>}
+
+        <div className="home-stats">
+          <div className="home-stat-card">
+            <p>누적 참여자</p>
+            <strong>{statistics?.totalParticipants || "-"}</strong>
+          </div>
+
+          <div className="home-stat-card">
+            <p>오늘 생성 투표</p>
+            <strong>{statistics?.todayPolls || "-"}</strong>
+          </div>
+        </div>
+
+        <section className="home-popular-section">
+          <h3>🔥 이번 주 인기 포토스팟</h3>
+
+          <div className="popular-card-list">
+            {popularSpots.map((spot) => (
+              <article key={spot.id} className="popular-card">
+                <div className="popular-rank-badge">{spot.rank}위</div>
+
+                {spot.imageUrl ? (
+                  <img className="popular-image-box" src={spot.imageUrl} alt={spot.name} />
+                ) : (
+                  <div className="popular-image-box" />
+                )}
+
+                <div className="popular-info">
+                  <strong>{spot.name}</strong>
+                  <span>추천율 {spot.recommendRate}%</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <button type="button" className="home-create-button" onClick={() => navigate(ROUTES.CREATE)}>
+          📸 새 투표 만들기
+        </button>
+
+        <section className="home-accordion-section">
+          <PollGroup title="내 진행중인 투표" polls={activePolls} defaultOpen onMovePoll={movePoll} />
+
+          <PollGroup title="내 종료된 투표" polls={closedPolls} onMovePoll={movePoll} />
+        </section>
       </section>
-
-      <section className="section-block">
-        <div className="section-title">
-          <h2>이번 주 인기 포토스팟</h2>
-          <span>TOP 3</span>
-        </div>
-        <div className="spot-list">
-          {spots.map((spot, index) => (
-            <article className="spot-card" key={spot.name}>
-              <div className={`spot-photo spot-photo--${spot.tone}`}>
-                <span className="rank-badge">{index + 1}</span>
-              </div>
-              <div className="spot-card-body">
-                <h3>{spot.name}</h3>
-                <strong>{spot.rate}</strong>
-              </div>
-              <div>
-                {spot.tags.map((tag) => (
-                  <span className="tag" key={tag}>#{tag}</span>
-                ))}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <Link className="primary-cta" to="/create">
-        새 투표 만들기
-      </Link>
-
-      <section className="section-block">
-        <div className="section-title">
-          <h2>내 투표</h2>
-          <span>{activePolls.length + closedPolls.length}개</span>
-        </div>
-        <PollGroup
-          id="active"
-          title="진행중인 투표"
-          polls={activePolls}
-          isOpen={openGroups.active}
-          onToggle={toggleGroup}
-        />
-        <PollGroup
-          id="closed"
-          title="종료된 투표"
-          polls={closedPolls}
-          isOpen={openGroups.closed}
-          onToggle={toggleGroup}
-        />
-      </section>
-    </main>
+    </AppLayout>
   );
 }
 
-function PollGroup({ id, title, polls, isOpen, onToggle }) {
+function PollGroup({ title, polls, defaultOpen = false, onMovePoll }) {
   return (
-    <section className="poll-group">
-      <button
-        className="poll-group-header"
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls={`${id}-poll-list`}
-        onClick={() => onToggle(id)}
-      >
-        <span className="poll-group-title">
-          <strong>{title}</strong>
-          <em>{polls.length}개</em>
-        </span>
-        <span className={`poll-group-arrow ${isOpen ? 'is-open' : ''}`} aria-hidden="true">
-          ▾
-        </span>
-      </button>
-      {isOpen && (
-        <div className="poll-list" id={`${id}-poll-list`}>
-          {polls.map((poll) => (
-            <Link className="poll-item" to={`/result/${poll.id}`} key={poll.id}>
-              <div>
-                <strong>{poll.title}</strong>
-                <span>{poll.status}</span>
-              </div>
-              <em>{poll.count}명</em>
-            </Link>
-          ))}
-        </div>
-      )}
-    </section>
+    <details className="home-accordion" open={defaultOpen}>
+      <summary>
+        {title} ({polls.length})
+      </summary>
+
+      <div className="home-poll-list">
+        {polls.map((poll) => (
+          <button key={poll.id} type="button" onClick={() => onMovePoll(poll)}>
+            <div>
+              <strong>{poll.title}</strong>
+              <span>{poll.description}</span>
+            </div>
+            <em>›</em>
+          </button>
+        ))}
+      </div>
+    </details>
   );
 }
 
