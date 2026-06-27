@@ -834,6 +834,23 @@ input {
   background: linear-gradient(135deg, var(--pickly-cyan), var(--pickly-blue));
 }
 
+.vote-progress {
+  display: grid;
+  gap: 10px;
+}
+
+.vote-progress__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--pickly-muted);
+  font-size: 13px;
+}
+
+.vote-progress__meta strong {
+  color: var(--pickly-text);
+}
+
 .swipe-card {
   position: relative;
   margin: 46px auto 32px;
@@ -901,24 +918,71 @@ input {
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 24px;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   align-items: flex-end;
+  gap: 8px;
   padding: 18px;
   color: #ffffff;
   font-weight: 800;
 }
 
+.mock-photo span,
+.mock-photo em {
+  width: 100%;
+  font-style: normal;
+}
+
+.mock-photo em {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.mock-photo--cafe {
+  background:
+    linear-gradient(180deg, rgba(4, 17, 36, 0.05), rgba(4, 17, 36, 0.72)),
+    radial-gradient(circle at 26% 20%, rgba(254, 229, 0, 0.36), transparent 25%),
+    linear-gradient(135deg, #6b4e7b, #133553 68%);
+}
+
+.mock-photo--sun {
+  background:
+    linear-gradient(180deg, rgba(4, 17, 36, 0.05), rgba(4, 17, 36, 0.72)),
+    radial-gradient(circle at 72% 22%, rgba(255, 255, 255, 0.44), transparent 22%),
+    linear-gradient(135deg, #0dd5b1, #5974e9);
+}
+
+.mock-photo--street {
+  background:
+    linear-gradient(180deg, rgba(4, 17, 36, 0.05), rgba(4, 17, 36, 0.72)),
+    linear-gradient(135deg, #263c58, #0d223e 50%, #593c72);
+}
+
+.mock-photo--forest {
+  background:
+    linear-gradient(180deg, rgba(4, 17, 36, 0.05), rgba(4, 17, 36, 0.72)),
+    linear-gradient(135deg, #0f5a4f, #102742 72%);
+}
+
 .swipe-hint {
-  margin: -10px 0 18px;
+  margin: 0;
   color: var(--pickly-muted);
   text-align: center;
   font-size: 13px;
 }
 
+.vote-actions,
 .undo-action {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   justify-content: center;
 }
 
+.vote-actions button,
 .undo-action button {
   min-width: 144px;
   min-height: 50px;
@@ -930,9 +994,17 @@ input {
   font-weight: 800;
 }
 
+.vote-actions button:disabled,
 .undo-action button:disabled {
   color: #526071;
   cursor: not-allowed;
+}
+
+.vote-actions span {
+  min-height: 18px;
+  color: var(--pickly-cyan);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .done-card {
@@ -948,6 +1020,42 @@ input {
 
 .done-card p {
   color: var(--pickly-muted);
+}
+
+.completion-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: rgba(2, 8, 20, 0.74);
+}
+
+.completion-modal {
+  width: min(100%, 329px);
+  border: 1px solid var(--pickly-line);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 22px;
+  background: linear-gradient(180deg, #0d223e, #07172b);
+  text-align: center;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+}
+
+.completion-modal strong {
+  font-size: 26px;
+}
+
+.completion-modal p {
+  margin: 10px 0 22px;
+  color: var(--pickly-muted);
+}
+
+.completion-modal .primary-cta {
+  width: 100%;
 }
 
 .ai-card {
@@ -1006,6 +1114,14 @@ input {
   color: var(--pickly-muted);
   font-size: 13px;
   line-height: 1.45;
+}
+
+.poll-item--stacked {
+  align-items: flex-start;
+}
+
+.poll-item--stacked em {
+  white-space: nowrap;
 }
 
 .avatar {
