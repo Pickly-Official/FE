@@ -711,17 +711,54 @@ input {
     linear-gradient(180deg, rgba(4, 17, 36, 0), rgba(4, 17, 36, 0.72)),
     radial-gradient(circle at 40% 30%, #274d68, #0b2039 68%);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  cursor: grab;
+  touch-action: none;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+  user-select: none;
+  will-change: transform;
 }
 
-.like-label {
+.swipe-card:focus-visible {
+  outline: 3px solid rgba(13, 213, 177, 0.72);
+  outline-offset: 5px;
+}
+
+.swipe-card.is-dragging {
+  cursor: grabbing;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.44);
+  transition: none;
+}
+
+.swipe-card.is-flyout-like,
+.swipe-card.is-flyout-skip {
+  pointer-events: none;
+}
+
+.swipe-label {
   position: absolute;
   top: 22px;
-  right: 22px;
-  border: 2px solid var(--pickly-cyan);
   border-radius: 12px;
   padding: 6px 10px;
-  color: var(--pickly-cyan);
   font-weight: 900;
+  letter-spacing: 0;
+  z-index: 2;
+}
+
+.swipe-label--skip {
+  left: 22px;
+  border: 2px solid #ff667d;
+  color: #ff667d;
+  opacity: var(--skip-opacity, 0);
+  transform: rotate(-9deg);
+}
+
+.swipe-label--like {
+  right: 22px;
+  border: 2px solid var(--pickly-cyan);
+  color: var(--pickly-cyan);
+  opacity: var(--like-opacity, 0);
   transform: rotate(9deg);
 }
 
@@ -736,23 +773,30 @@ input {
   font-weight: 800;
 }
 
-.vote-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
+.swipe-hint {
+  margin: -10px 0 18px;
+  color: var(--pickly-muted);
+  text-align: center;
+  font-size: 13px;
 }
 
-.vote-actions button {
-  min-height: 54px;
+.undo-action {
+  display: flex;
+  justify-content: center;
+}
+
+.undo-action button {
+  min-width: 144px;
+  min-height: 50px;
   border: 1px solid var(--pickly-line);
-  border-radius: 18px;
+  border-radius: 999px;
   background: var(--pickly-panel);
   color: #ffffff;
   cursor: pointer;
   font-weight: 800;
 }
 
-.vote-actions button:disabled {
+.undo-action button:disabled {
   color: #526071;
   cursor: not-allowed;
 }
