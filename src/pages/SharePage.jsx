@@ -40,6 +40,16 @@ function SharePage() {
 
   return (
     <main className="app-canvas page-canvas centered-canvas">
+      <div className="success-fireworks" aria-hidden="true">
+        {['left', 'center', 'right'].map((position) => (
+          <span className={`success-firework success-firework--${position}`} key={position}>
+            {Array.from({ length: 8 }, (_, index) => (
+              <i key={index} style={{ '--spark-index': index }} />
+            ))}
+          </span>
+        ))}
+      </div>
+
       <section className="success-mark" aria-hidden="true">
         <span />
       </section>
