@@ -13,6 +13,9 @@ function AppRouter() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/create" element={<CreatePollPage />} />
+        <Route path="/share/:id" element={<SharePage />} />
+        <Route path="/result/:id" element={<ResultPage />} />
         <Route path="/home/create" element={<CreatePollPage />} />
         <Route path="/home/create/share/:id" element={<SharePage />} />
         <Route path="/home/create/share/:id/vote" element={<VotePage />} />
