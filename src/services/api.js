@@ -5,6 +5,7 @@ export const hasApiBaseUrl = Boolean(API_BASE_URL);
 export const API_ORIGIN = hasApiBaseUrl
   ? API_BASE_URL.replace(/\/api$/, "")
   : "";
+export const AUTH_ORIGIN = (import.meta.env.VITE_AUTH_ORIGIN || API_ORIGIN).trim().replace(/\/+$/, "");
 
 const api = axios.create({
   baseURL: API_BASE_URL,

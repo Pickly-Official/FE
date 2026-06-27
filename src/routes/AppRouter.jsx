@@ -6,12 +6,14 @@ import SharePage from '../pages/SharePage';
 import VotePage from '../pages/VotePage';
 import ResultPage from '../pages/ResultPage';
 import MyPage from '../pages/MyPage';
+import OAuthCallbackPage from '../pages/OAuthCallbackPage';
 
 function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/oauth2/callback" element={<OAuthCallbackPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/create" element={<CreatePollPage />} />
         <Route path="/share/:id" element={<SharePage />} />

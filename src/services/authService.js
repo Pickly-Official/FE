@@ -1,4 +1,4 @@
-import { API_ORIGIN, hasApiBaseUrl } from "./api";
+import { API_ORIGIN, AUTH_ORIGIN, hasApiBaseUrl } from "./api";
 
 export const authService = {
   startSocialLogin: (provider) => {
@@ -7,7 +7,7 @@ export const authService = {
       return;
     }
 
-    window.location.href = `${API_ORIGIN}/oauth2/authorization/${provider}`;
+    window.location.href = `${AUTH_ORIGIN}/oauth2/authorization/${provider}`;
   },
 
   getMyInfo: async () => {

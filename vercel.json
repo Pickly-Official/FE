@@ -9,6 +9,10 @@
       "destination": "http://15.164.97.188:8080/oauth2/:path*"
     },
     {
+      "source": "/login/oauth2/:path*",
+      "destination": "http://15.164.97.188:8080/login/oauth2/:path*"
+    },
+    {
       "source": "/:path*",
       "destination": "/index.html"
     }
