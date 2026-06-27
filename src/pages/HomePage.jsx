@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const spots = [
-  { name: '서울숲', rate: '92%', tags: ['감성', '초록', '햇살'] },
-  { name: '성수 카페거리', rate: '88%', tags: ['카페', '인물'] },
-  { name: '한강공원', rate: '84%', tags: ['야경', '피크닉'] },
+  { name: '서울숲', rate: '92%', tags: ['감성', '초록', '햇살'], tone: 'forest' },
+  { name: '성수 카페거리', rate: '88%', tags: ['카페', '인물'], tone: 'cafe' },
+  { name: '한강공원', rate: '84%', tags: ['야경', '피크닉'], tone: 'river' },
 ];
 
 const activePolls = [
@@ -61,9 +61,13 @@ function HomePage() {
         <div className="spot-list">
           {spots.map((spot, index) => (
             <article className="spot-card" key={spot.name}>
-              <span className="rank-badge">{index + 1}</span>
-              <h3>{spot.name}</h3>
-              <strong>{spot.rate}</strong>
+              <div className={`spot-photo spot-photo--${spot.tone}`}>
+                <span className="rank-badge">{index + 1}</span>
+              </div>
+              <div className="spot-card-body">
+                <h3>{spot.name}</h3>
+                <strong>{spot.rate}</strong>
+              </div>
               <div>
                 {spot.tags.map((tag) => (
                   <span className="tag" key={tag}>#{tag}</span>
