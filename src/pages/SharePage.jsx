@@ -1,8 +1,17 @@
-import { Link, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { copyToClipboard } from '../utils/copyToClipboard';
 
 function SharePage() {
   const { id = 'demo' } = useParams();
+  const { state } = useLocation();
+  const [copyStatus, setCopyStatus] = useState('');
   const shareUrl = `https://pickly.app/vote/${id}`;
+
+  const handleCopy = async () => {
+    const copied = await copyToClipboard(shareUrl);
+    setCopyStatus(copied ? '링크를 복사했어요.' : '복사에 실패했어요.');
+  };
 
   return (
     <main className="app-canvas page-canvas centered-canvas">
@@ -10,12 +19,22 @@ function SharePage() {
         <span />
       </section>
       <h1>투표가 만들어졌어요</h1>
-      <p className="muted-copy">친구들에게 링크를 보내고 스와이프 평가를 받아보세요.</p>
+      <p className="muted-copy">
+        {state?.title ? `"${state.title}" 링크를 친구들에게 보내보세요.` : '친구들에게 링크를 보내고 스와이프 평가를 받아보세요.'}
+      </p>
+
+      {state?.photoCount && (
+        <div className="share-summary">
+          <span>사진 {state.photoCount}장</span>
+          <span>{state.deadlineHours}시간 후 마감</span>
+        </div>
+      )}
 
       <div className="share-box">
         <span>{shareUrl}</span>
-        <button type="button">복사</button>
+        <button type="button" onClick={handleCopy}>복사</button>
       </div>
+      {copyStatus && <p className="helper-copy">{copyStatus}</p>}
 
       <button className="kakao-share" type="button">카카오톡으로 공유</button>
       <Link className="text-link" to={`/vote/${id}`}>친구들이 보는 화면 미리보기</Link>
