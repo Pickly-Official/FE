@@ -25,6 +25,7 @@ function CreatePollPage() {
   const { photos, addPhotos, removePhoto, resetPhotos, error: imageError } = useImageUpload();
   const { createPoll, isCreating, error: createError } = usePoll();
   const isReadyToCreate = title.trim().length > 0 && photos.length >= POLL_OPTIONS.minPhotos && locationGroups.length > 0;
+  const submitError = formErrors.title || formErrors.photos || formErrors.location || createError;
 
   const resetLocationAnalysis = () => {
     setLocationGroups([]);
@@ -67,6 +68,7 @@ function CreatePollPage() {
     window.setTimeout(() => {
       setLocationGroups(mockLocationGroups);
       setLocationName(mockLocationGroups[0].name);
+      setFormErrors((current) => ({ ...current, location: '' }));
       setIsAnalyzingLocation(false);
     }, 600);
   };
@@ -121,7 +123,7 @@ function CreatePollPage() {
         <h1>새 투표 만들기</h1>
       </div>
 
-      <label className="field-group">
+      <label className={`field-group ${formErrors.title ? 'is-error' : ''}`}>
         <span>투표 제목</span>
         <input
           type="text"
@@ -153,18 +155,16 @@ function CreatePollPage() {
           }}
         />
       ) : (
-        <section className="location-pending-card">
+        <section className={`location-pending-card ${formErrors.location ? 'is-error' : ''}`}>
           사진을 업로드하고 완료를 누르면 위치 정보가 표시돼요.
         </section>
       )}
 
-      {formErrors.location && <p className="form-error create-location-error">{formErrors.location}</p>}
-
-      {createError && <p className="form-error">{createError}</p>}
-
-      <button className="sticky-cta" type="button" onClick={handleSubmit} disabled={isCreating || !isReadyToCreate}>
+      <button className="sticky-cta" type="button" onClick={handleSubmit} disabled={isCreating}>
         {isCreating ? '생성 중' : isReadyToCreate ? '투표 생성' : '위치 확인 후 생성'}
       </button>
+
+      {submitError && <p className="form-error create-submit-error">{submitError}</p>}
     </main>
   );
 }

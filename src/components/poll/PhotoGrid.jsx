@@ -23,7 +23,7 @@ function PhotoGrid({
   };
 
   return (
-    <section className="section-block">
+    <section className={`section-block ${error ? 'is-error' : ''}`}>
       <div className="section-title">
         <h2>사진 업로드</h2>
         <span>{photos.length} / {maxPhotos}</span>

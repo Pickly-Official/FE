@@ -2683,6 +2683,16 @@ input {
   box-shadow: 0 0 0 3px rgba(0, 229, 168, 0.13);
 }
 
+.create-canvas .field-group.is-error span {
+  color: var(--pickly-danger);
+}
+
+.create-canvas .field-group.is-error input {
+  border-color: var(--pickly-danger);
+  background: rgba(255, 102, 125, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 102, 125, 0.12);
+}
+
 .create-canvas .field-group .form-error {
   position: static;
   margin: 2px 0 0;
@@ -2786,6 +2796,12 @@ input {
   color: #8ea0b3;
   font-size: 16px;
   line-height: 19px;
+}
+
+.create-canvas .section-block.is-error .photo-tile--add,
+.create-canvas .section-block.is-error .photo-tile--preview {
+  border-color: var(--pickly-danger);
+  box-shadow: 0 0 0 3px rgba(255, 102, 125, 0.1);
 }
 
 .create-canvas .photo-complete-button {
@@ -2920,6 +2936,12 @@ input {
   text-align: center;
 }
 
+.create-canvas .location-pending-card.is-error {
+  border-color: var(--pickly-danger);
+  background: rgba(255, 102, 125, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 102, 125, 0.1);
+}
+
 .create-canvas .location-analysis-panel {
   min-height: 188px;
   margin: 0;
@@ -3006,6 +3028,14 @@ input {
   left: 14px;
   top: 782px;
   margin: 0;
+}
+
+.create-canvas .create-submit-error {
+  width: 350px;
+  margin: 8px 0 0;
+  padding: 0 2px;
+  font-weight: 600;
+  text-align: center;
 }
 
 .create-canvas > .form-error:not(.create-location-error) {
